@@ -85,6 +85,9 @@ export default function App() {
     }
   };
 
+  const t = siteCopy[lang] || siteCopy.en;
+  const isRtl = lang === "ar" || lang === "ur";
+
   const categories = useMemo(() => {
     return Array.from(new Set(tools.map((t) => t.category)));
   }, []);
@@ -249,9 +252,6 @@ export default function App() {
     );
     return [...sameCat, ...others].slice(0, 3);
   }, [activeTool]);
-
-  const t = siteCopy[lang] || siteCopy.en;
-  const isRtl = lang === "ar" || lang === "ur";
 
   const handleCopyLink = () => {
     if (typeof window !== "undefined") {
