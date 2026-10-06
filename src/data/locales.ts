@@ -24,57 +24,109 @@ export const toolCopy: Record<string, Partial<Record<Exclude<Locale, "en">, Loca
   "islamic-inheritance-calculator": { ar: { title: "تقدير الميراث", short: "توضيح مبدئي لأنصبة الأسرة المباشرة." }, ur: { title: "وراثت کا اندازہ", short: "قریبی خاندان کے حصوں کی ابتدائی وضاحت۔" } },
   "hajj-cost-calculator": { ar: { title: "حاسبة تكلفة الحج", short: "قدّر تكلفة الحج للأسرة مع النفقات الرئيسية." }, ur: { title: "حج کے اخراجات کیلکولیٹر", short: "حج کے اہم اخراجات اور گھرانے کی کل لاگت جانیں۔" } },
   "umrah-cost-calculator": { ar: { title: "حاسبة تكلفة العمرة", short: "قدّر تكلفة العمرة حسب السفر والإقامة." }, ur: { title: "عمرہ اخراجات کیلکولیٹر", short: "سفر اور رہائش سمیت عمرے کی لاگت کا اندازہ۔" } },
-  "ramadan-budget-calculator": { ar: { title: "ميزانية رمضان", short: "خطط لمصروفات الشهر مقارنة بدخل الأسرة." }, ur: { title: "رمضان بجٹ", short: "رمضان کے ماہانہ اخراجات اور آمدنی کا بجٹ بنائیں۔" } },
-  "ramadan-charity-calculator": { ar: { title: "مخطط صدقة رمضان", short: "قدّر العطاء اليومي مع أي تبرع لمرة واحدة." }, ur: { title: "رمضان صدقہ منصوبہ", short: "روزانہ اور یک وقتی عطیے کا مجموعی اندازہ۔" } },
-  "islamic-charity-calculator": { ar: { title: "توزيع الصدقة", short: "خطط لتقسيم التبرع على مجالات العطاء." }, ur: { title: "صدقہ کی تقسیم", short: "عطیے کو مختلف شعبوں میں تقسیم کرنے کا منصوبہ۔" } }
+  "islamic-charity-calculator": { ar: { title: "توزيع الصدقة", short: "خطط لتقسيم التبرع على مجالات العطاء." }, ur: { title: "صدقہ کی تقسیم", short: "عطیے کو مختلف شعبوں میں تقسیم کرنے کا منصوبہ۔" } },
+
+  // Ramadan Tools (17 Tools)
+  "ramadan-countdown": { ar: { title: "العد التنازلي لرمضان", short: "العد التنازلي المباشر لرمضان وعيد الفطر والسحور والإفطار." }, ur: { title: "رمضان الٹی گنتی", short: "رمضان المبارک، عید الفطر، سحری اور افطار کی لائیو الٹی گنتی۔" } },
+  "ramadan-planner": { ar: { title: "مخطط جدول رمضان اليومي", short: "جدول يومي تفاعلي للعبادة والأنشطة محفوظ في متصفحك." }, ur: { title: "رمضان ڈیلی پلانر", short: "تہجد سے تراویح تک روزانہ عبادات کا انٹرایکٹو پلانر۔" } },
+  "ramadan-calendar": { ar: { title: "تقويم رمضان التفاعلي", short: "تقويم ٣٠ يوماً لمتابعة الصيام والصلوات والقرآن والصدقة." }, ur: { title: "رمضان کیلنڈر", short: "۳۰ دن کے روزوں، نمازوں، قرآن اور صدقات کا ٹریکر۔" } },
+  "ramadan-fasting-timer": { ar: { title: "مؤقت الصيام المباشر", short: "شريط تقدم الصيام مع عداد الإفطار وأدعية السنة النبوية." }, ur: { title: "روزہ ٹائمر", short: "سحری و افطار کا لائیو کاؤنٹ ڈاؤن اور مسنون دعائیں۔" } },
+  "suhoor-time-calculator": { ar: { title: "حاسبة وقت السحور", short: "حساب وقت الإمساك المثالي وفترة أمان قبل الفجر ووقت التهجد." }, ur: { title: "سحری کا وقت کیلکولیٹر", short: "سحری ختم ہونے کا وقت، احتیاطی وقفہ اور تہجد کا وقت۔" } },
+  "iftar-time-calculator": { ar: { title: "حاسبة وقت الإفطار", short: "حساب وقت الإفطار وساعة استجابة الدعاء الذهبية وأدعية الإفطار." }, ur: { title: "افطار کا وقت کیلکولیٹر", short: "افطار کا درست وقت، قبولیتِ دعا کا سنہری وقت اور مسنون دعائیں۔" } },
+  "fasting-duration-calculator": { ar: { title: "حاسبة ساعات الصيام", short: "حساب مدة الصيام بدقة ونصائح الترطيب وتوزيع شرب الماء." }, ur: { title: "روزے کے دورانیے کا کیلکولیٹر", short: "روزے کے کل گھنٹوں کا حساب اور پانی پینے کی رہنمائی۔" } },
+  "missed-fast-calculator": { ar: { title: "حاسبة قضاء وفدية الصيام", short: "متابعة قضاء الأيام الفائتة وحساب الفدية وخطة القضاء السنوية." }, ur: { title: "قضا روزہ کیلکولیٹر", short: "چھوٹے ہوئے روزوں کا حساب، فدیہ اور قضا کی منصوبہ بندی۔" } },
+  "quran-ramadan-planner": { ar: { title: "مخطط ختم القرآن في رمضان", short: "خطة ختم القرآن مرة أو أكثر مع تتبع الأجزاء والصفحات." }, ur: { title: "رمضان قرآن پلانر", short: "رمضان میں ۱، ۲ یا ۳ ختمِ قرآن کا مکمل یومیہ ٹریکر۔" } },
+  "ramadan-dhikr-tracker": { ar: { title: "متتبع أذكار رمضان والتسبيح", short: "مسبحة إلكترونية تفاعلية وتتبع أذكار الصباح والمساء والليل." }, ur: { title: "رمضان ذکر ٹریکر", short: "ڈیجیٹل تسبیح اور صبح و شام کے مسنون اذکار کا ٹریکر۔" } },
+  "ramadan-charity-calculator": { ar: { title: "حاسبة صدقة وزكاة فطر رمضان", short: "تخطيط الصدقة اليومية وحساب زكاة الفطر ومضاعفة العشر الأواخر." }, ur: { title: "رمضان صدقہ و زکوٰۃ الفطر", short: "روزانہ صدقہ، زکوٰۃ الفطر کا حساب اور آخری ۱۰ راتوں کا منصوبہ۔" } },
+  "ramadan-budget-planner": { ar: { title: "مخطط ميزانية ونفقات رمضان", short: "ميزانية تفاعلية لمقاضي السحور والإفطار والهدايا وكسوة العيد." }, ur: { title: "رمضان بجٹ پلانر", short: "سحری و افطاری، ضیافت اور عید کے اخراجات کا جامع بجٹ۔" } },
+  "ramadan-meal-planner": { ar: { title: "مخطط وجبات وسحور رمضان", short: "جدول وجبات السحور والإفطار الصحية ومتابعة شرب الماء وقائمة التسوق." }, ur: { title: "رمضان میل پلانر", short: "صحت بخش سحری و افطاری کا مینو اور ہائیڈریشن ٹریکر۔" } },
+  "ramadan-habit-tracker": { ar: { title: "متتبع سنن وعادات رمضان", short: "بناء ومتابعة العادات الإيمانية والسنن اليومية مع عداد الاستمرار." }, ur: { title: "رمضان عادات ٹریکر", short: "باجماعت نماز، تہجد اور نیکیوں کی ۳۰ روزہ عادت سازی۔" } },
+  "ramadan-goal-tracker": { ar: { title: "متتبع أهداف رمضان الإيمانية", short: "تحديد ومتابعة الأهداف القرآنية والروحية والأخلاقية." }, ur: { title: "رمضان اہداف ٹریکر", short: "روحانی، قرآنی اور اخلاقی اہداف و مقاصد کا مکمل ریکارڈ۔" } },
+  "last-10-nights-planner": { ar: { title: "مخطط العشر الأواخر من رمضان", short: "جدول عبادة مكثف لليالي الوترية من ٢١ إلى ٣٠ وتخطيط الاعتكاف." }, ur: { title: "آخری ۱۰ راتوں کا پلانر", short: "طاق راتوں کی خصوصی عبادت، قیام اللیل اور اعتکاف کا منصوبہ۔" } },
+  "laylatul-qadr-planner": { ar: { title: "دليل ومخطط ليلة القدر", short: "دعاء ليلة القدر المأثور ومنظم الأدعية الشخصية وجدول ساعات الليل." }, ur: { title: "شبِ قدر پلانر", short: "شبِ قدر کی خصوصی دعائیں، توبہ و استغفار اور گھنٹہ وار عبادت۔" } },
+
+  // Muslim Names Tools
+  "islamic-name-finder": { ar: { title: "باحث الأسماء الإسلامية", short: "ابحث عن الأسماء مع المعاني والكتابة العربية." }, ur: { title: "اسلامی نام تلاش کار", short: "معانی، عربی رسم الخط اور اصل کے ساتھ نام تلاش کریں۔" } },
+  "muslim-baby-name-generator": { ar: { title: "مولد أسماء المواليد الإسلامية", short: "توليد أسماء مباركة حسب تفضيلاتك." }, ur: { title: "مسلم بے بی نام جنریٹر", short: "اپنی پسند کے مطابق بامعنی اسلامی نام بنائیں۔" } },
+  "arabic-name-meaning-tool": { ar: { title: "أداة معاني الأسماء العربية", short: "استكشف الجذر اللغوي والدلالات الإيمانية." }, ur: { title: "عربی نام معانی ٹول", short: "بنیادی معانی اور قرآنی پس منظر جانیں۔" } },
+  "muslim-boy-names": { ar: { title: "أسماء أولاد إسلامية", short: "دليل موثق لأسماء الذكور مع المعاني." }, ur: { title: "مسلم لڑکوں کے نام", short: "لڑکوں کے مستند نام بمع مکمل معانی۔" } },
+  "muslim-girl-names": { ar: { title: "أسماء بنات إسلامية", short: "أسماء إناث جميلة مع معاني العفة والنور." }, ur: { title: "مسلم لڑکیوں کے نام", short: "لڑکیوں کے خوبصورت اور بابرکت نام۔" } },
+  "quranic-names-finder": { ar: { title: "باحث الأسماء القرآنية", short: "أسماء مقتبسة من آيات القرآن الكريم." }, ur: { title: "قرآنی نام فائنڈر", short: "قرآن پاک سے ماخوذ مبارک نام۔" } },
+  "names-by-meaning": { ar: { title: "الأسماء حسب المعنى", short: "استكشف الأسماء حسب معاني النور والحكمة والقوة." }, ur: { title: "معانی کے لحاظ سے نام", short: "نور، حکمت اور شجاعت کے مفہوم والے نام۔" } },
+  "names-by-letter": { ar: { title: "الأسماء حسب الحروف", short: "دليل أبجدي لجميع الأسماء مع النطق والمعنى." }, ur: { title: "حروف کے لحاظ سے نام", short: "الف سے ی تک حروف تہجی کے مطابق نام۔" } },
+  "names-by-origin": { ar: { title: "الأسماء حسب الأصل", short: "أسماء عربية وفارسية وتركية وأردية." }, ur: { title: "اصل و نسل کے لحاظ سے نام", short: "عربی، فارسی، ترکی اور اردو پس منظر کے نام۔" } },
+  "twin-muslim-name-generator": { ar: { title: "مولد أسماء التوائم الإسلامية", short: "توليد ثنائيات متناسقة ومنغمة للتوائم." }, ur: { title: "جڑواں بچوں کے نام جنریٹر", short: "جڑواں بچوں کے ہم قافیہ اور ہم وزن نام۔" } },
+  "rare-muslim-name-finder": { ar: { title: "باحث الأسماء النادرة", short: "أسماء إسلامية أصيلة ونادرة وفريدة." }, ur: { title: "نایاب اسلامی نام", short: "منفرد اور نایاب مستند اسلامی نام۔" } },
+  "modern-muslim-name-finder": { ar: { title: "باحث الأسماء المعاصرة", short: "أسماء خفيفة وعصرية وسهلة النطق." }, ur: { title: "جدید اسلامی نام", short: "خوبصورت اور جدید انداز کے اسلامی نام۔" } },
+  "traditional-muslim-name-finder": { ar: { title: "باحث الأسماء التقليدية", short: "أسماء الأنبياء والصحابة والصحابيات." }, ur: { title: "روایتی اسلامی نام", short: "انبیائے کرام اور صحابہ و صحابیات کے نام۔" } }
 };
 
 export const categoryCopy: Record<string, Record<Exclude<Locale, "en">, string>> = {
   Zakat: { ar: "الزكاة", ur: "زکوٰۃ" },
   Ramadan: { ar: "رمضان", ur: "رمضان" },
+  "Ramadan Tools": { ar: "أدوات ومخططات رمضان", ur: "رمضان ٹولز و پلانرز" },
   "Worship planning": { ar: "تنظيم العبادة", ur: "عبادت کی منصوبہ بندی" },
   Quran: { ar: "القرآن", ur: "قرآن" },
   "Prayer times": { ar: "أوقات الصلاة", ur: "نماز کے اوقات" },
   "Family & planning": { ar: "الأسرة والتخطيط", ur: "خاندان اور منصوبہ بندی" },
   "Travel planning": { ar: "تخطيط السفر", ur: "سفر کی منصوبہ بندی" },
-  Giving: { ar: "العطاء", ur: "عطیات" }
+  Giving: { ar: "العطاء", ur: "عطیات" },
+  "Muslim Names Tools": { ar: "أدوات الأسماء الإسلامية", ur: "اسلامی ناموں کے ٹولز" }
 };
 
 export const siteCopy: Record<Locale, Record<string, string>> = {
   en: {
-    calculators: "Calculators", ramadan: "Ramadan", finance: "Finance", food: "Food", more: "More", home: "Home", allTools: "All calculators", footerNote: "Thoughtful estimates for everyday questions.",
-    breadcrumbCategory: "Islamic Calculators", heroEyebrow: "AMANAH / A CONSIDERED STARTING POINT", heroTitle: "Faithful Calculations for Worship, Giving & Daily Life",
-    heroDescription: "Practical estimates for worship, giving and everyday planning. Clear assumptions up front, and thoughtful reminders where local guidance may differ.",
-    practicalTools: "25 practical tools", privateInputs: "Your inputs stay in your browser", notRulings: "Estimates, not rulings", exploreEyebrow: "EXPLORE THE COLLECTION",
-    findTool: "Find a calculator", findDescription: "Choose a tool to start. Each estimate explains its inputs and makes its assumptions visible.",
+    calculators: "Calculators", ramadan: "Ramadan Tools", names: "Muslim Names", finance: "Finance", food: "Food", more: "More", home: "Home", allTools: "All calculators", footerNote: "Thoughtful estimates for everyday questions.",
+    breadcrumbCategory: "Islamic Calculators", heroEyebrow: "AMANAH / ISLAMIC CALCULATORS & TOOLS", heroTitle: "Faithful Calculations for Worship, Giving & Financial Life",
+    heroDescription: "Practical, private estimates for Zakat on wealth, gold, silver, investments, prayer times, Quran pacing, and family planning. All calculations remain 100% in your browser.",
+    practicalTools: "18 dedicated calculators", privateInputs: "100% private in browser", notRulings: "Practical estimates, not fatwas", exploreEyebrow: "EXPLORE CALCULATORS",
+    findTool: "Find a calculator", findDescription: "Choose an Islamic calculator to start. Each tool details its inputs, formulas, and verified assumptions.",
     tools: "tools", openCalculator: "Open calculator", estimateEyebrow: "A NOTE ON ESTIMATES", estimateTitle: "Useful for planning. Not a substitute for guidance.",
     estimateDescription: "Some calculations depend on personal circumstances or scholarly approaches. Review each tool’s assumptions and consult a qualified scholar when a ruling matters.",
     continueExploring: "CONTINUE EXPLORING", relatedCalculators: "Related calculators", browseAll: "Browse all tools", open: "Open", estimateIntro: "estimate",
     pageIntro: "Enter your details for a practical estimate. Review the assumptions and notes before relying on it.",
-    notFoundTitle: "Page not found", notFoundDescription: "This calculator page isn't here. Check the address or return to the full collection.", returnToCalculators: "Return to calculators"
+    notFoundTitle: "Page not found", notFoundDescription: "This calculator page isn't here. Check the address or return to the full collection.", returnToCalculators: "Return to calculators",
+    ramadanHeroEyebrow: "AMANAH / RAMADAN TOOLS & COMPANION",
+    ramadanHeroTitle: "Interactive Ramadan Suite: Timers, Planners & Trackers",
+    ramadanHeroDescription: "Complete suite of 17 tools: fasting progress countdowns, Suhoor & Iftar calculators, 30 Juz Quran planner, digital tasbeeh dhikr tracker, budget planner, meal schedules, and Laylatul Qadr blueprints. All data is saved privately in your browser.",
+    namesHeroEyebrow: "AMANAH / MUSLIM NAMES & MEANINGS",
+    namesHeroTitle: "Muslim Names & Meanings Hub",
+    namesHeroDescription: "Explore 13 Muslim name tools with verified meanings for every name: Islamic Name Finder, Baby Name Generator, Arabic roots, Quranic origin markers, Twin name pairings, rare & modern gems, with audio pronunciation."
   },
   ar: {
-    calculators: "الحاسبات", ramadan: "رمضان", finance: "المالية", food: "الطعام", more: "المزيد", home: "الرئيسية", allTools: "كل الحاسبات", footerNote: "تقديرات متأنية لأسئلة الحياة اليومية.",
-    breadcrumbCategory: "الحاسبات الإسلامية", heroEyebrow: "أمانة / بداية مدروسة", heroTitle: "حسابات إسلامية موثوقة للعبادة والعطاء والحياة.",
-    heroDescription: "تقديرات عملية للعبادة والعطاء والتخطيط اليومي، مع توضيح الافتراضات والتنبيه إلى اختلاف الإرشادات المحلية.",
-    practicalTools: "٢٥ أداة عملية", privateInputs: "تبقى مدخلاتك في متصفحك", notRulings: "تقديرات وليست فتاوى", exploreEyebrow: "استكشف المجموعة",
-    findTool: "اختر حاسبة", findDescription: "ابدأ باختيار أداة. توضح كل نتيجة مدخلاتها والافتراضات المستخدمة.",
+    calculators: "الحاسبات", ramadan: "أدوات رمضان", names: "الأسماء الإسلامية", finance: "المالية", food: "الطعام", more: "المزيد", home: "الرئيسية", allTools: "كل الحاسبات", footerNote: "تقديرات متأنية لأسئلة الحياة اليومية.",
+    breadcrumbCategory: "الحاسبات الإسلامية", heroEyebrow: "أمانة / الحاسبات والمقدِّرات الإسلامية", heroTitle: "حسابات إسلامية موثوقة للزكاة والعبادة والعطاء والمال.",
+    heroDescription: "حاسبات دقيقة ومجانية لحساب زكاة المال والذهب والاستثمار ومواقيت الصلاة وختم القرآن والميراث بخصوصية تامة في متصفحك.",
+    practicalTools: "١٨ حاسبة إسلامية متخصصة", privateInputs: "تبقى مدخلاتك في متصفحك محلياً", notRulings: "تقديرات عملية وليست فتاوى", exploreEyebrow: "استكشف الحاسبات",
+    findTool: "اختر حاسبة", findDescription: "ابدأ باختيار حاسبة إسلامية. توضح كل نتيجة مدخلاتها والمعادلات المتبعة.",
     tools: "أدوات", openCalculator: "افتح الحاسبة", estimateEyebrow: "ملاحظة حول التقديرات", estimateTitle: "للتخطيط، وليست بديلاً عن الإرشاد.",
     estimateDescription: "تعتمد بعض الحسابات على الظروف الشخصية أو الآراء الفقهية. راجع افتراضات كل أداة واستشر عالماً مؤهلاً عند الحاجة إلى حكم شرعي.",
     continueExploring: "تابع الاستكشاف", relatedCalculators: "حاسبات ذات صلة", browseAll: "تصفح كل الأدوات", open: "افتح", estimateIntro: "تقدير",
     pageIntro: "أدخل بياناتك للحصول على تقدير عملي. راجع الافتراضات والتنبيهات قبل الاعتماد عليه.",
-    notFoundTitle: "الصفحة غير موجودة", notFoundDescription: "لا تظهر صفحة الحاسبة المطلوبة. تحقق من العنوان أو عُد إلى مجموعة الحاسبات.", returnToCalculators: "العودة إلى الحاسبات"
+    notFoundTitle: "الصفحة غير موجودة", notFoundDescription: "لا تظهر صفحة الحاسبة المطلوبة. تحقق من العنوان أو عُد إلى مجموعة الحاسبات.", returnToCalculators: "العودة إلى الحاسبات",
+    ramadanHeroEyebrow: "أمانة / أدوات ومخططات رمضان",
+    ramadanHeroTitle: "مجموعة أدوات ومخططات شهر رمضان المبارك",
+    ramadanHeroDescription: "مجموعة متكاملة تضم ١٧ أداة: مؤقتات الصيام والإمساك والإفطار، مخطط ختم القرآن ٣٠ جزءاً، مسبحة الأذكار، حاسبات الصدقة والميزانية، ومخطط ليلة القدر مع حفظ محلي كامل لبياناتك.",
+    namesHeroEyebrow: "أمانة / الأسماء الإسلامية ومعانيها",
+    namesHeroTitle: "دليل الأسماء الإسلامية ومعانيها الموثقة",
+    namesHeroDescription: "استكشف ١٣ أداة لأسماء الأولاد والبنات مع عرض المعاني الدقيقة لكل اسم، وجذورها اللغوية، والأسماء القرآنية والتوأمية والنادرة والحديثة مع النطق الصوتي."
   },
   ur: {
-    calculators: "کیلکولیٹرز", ramadan: "رمضان", finance: "مالیات", food: "خوراک", more: "مزید", home: "صفحۂ اول", allTools: "تمام کیلکولیٹرز", footerNote: "روزمرہ سوالات کے لیے محتاط اندازے۔",
-    breadcrumbCategory: "اسلامی کیلکولیٹرز", heroEyebrow: "امانت / ایک سوچا سمجھا آغاز", heroTitle: "عبادت، خیرات اور روزمرہ زندگی کے لیے قابلِ اعتماد اسلامی حسابات۔",
-    heroDescription: "عبادت، خیرات اور روزمرہ منصوبہ بندی کے عملی اندازے۔ مفروضے واضح ہیں اور مقامی رہنمائی کے اختلاف کی یاد دہانی بھی۔",
-    practicalTools: "۲۵ عملی ٹولز", privateInputs: "آپ کی معلومات اسی براؤزر میں رہتی ہیں", notRulings: "اندازے، شرعی احکام نہیں", exploreEyebrow: "مجموعہ دیکھیں",
-    findTool: "کیلکولیٹر منتخب کریں", findDescription: "شروع کرنے کے لیے ایک ٹول منتخب کریں۔ ہر اندازے میں اس کے اِن پٹس اور مفروضے واضح ہیں۔",
+    calculators: "کیلکولیٹرز", ramadan: "رمضان ٹولز", names: "اسلامی نام", finance: "مالیات", food: "خوراک", more: "مزید", home: "صفحۂ اول", allTools: "تمام کیلکولیٹرز", footerNote: "روزمرہ سوالات کے لیے محتاط اندازے۔",
+    breadcrumbCategory: "اسلامی کیلکولیٹرز", heroEyebrow: "امانت / اسلامی کیلکولیٹرز اور ٹولز", heroTitle: "زکوٰۃ، عبادات اور مالیاتی زندگی کے لیے مستند اسلامی حسابات۔",
+    heroDescription: "زکوٰۃ، سونا، چاندی، سرمایہ کاری، اوقاتِ نماز، قرآن پاک کی تکمیل اور خاندانی منصوبہ بندی کے لیے نجی و محفوظ کیلکولیٹرز۔ تمام معلومات آپ کے براؤزر میں رہتی ہیں۔",
+    practicalTools: "۱۸ مخصوص کیلکولیٹرز", privateInputs: "۱۰۰٪ نجی و محفوظ براؤزر اسٹوریج", notRulings: "عملی اندازے، شرعی فتاویٰ نہیں", exploreEyebrow: "کیلکولیٹرز دیکھیں",
+    findTool: "کیلکولیٹر منتخب کریں", findDescription: "شروع کرنے کے لیے ایک اسلامی کیلکولیٹر منتخب کریں۔ ہر اندازے میں اس کے اِن پٹس اور مفروضے واضح ہیں۔",
     tools: "ٹولز", openCalculator: "کیلکولیٹر کھولیں", estimateEyebrow: "اندازوں کے بارے میں", estimateTitle: "منصوبہ بندی کے لیے، رہنمائی کا متبادل نہیں۔",
     estimateDescription: "کچھ حسابات ذاتی حالات یا فقہی آراء پر منحصر ہوتے ہیں۔ ہر ٹول کے مفروضے دیکھیں اور شرعی حکم درکار ہو تو اہلِ علم سے رجوع کریں۔",
     continueExploring: "مزید دیکھیں", relatedCalculators: "متعلقہ کیلکولیٹرز", browseAll: "تمام ٹولز دیکھیں", open: "کھولیں", estimateIntro: "اندازہ",
     pageIntro: "عملی اندازے کے لیے اپنی معلومات درج کریں۔ انحصار کرنے سے پہلے مفروضے اور وضاحتیں دیکھیں۔",
-    notFoundTitle: "صفحہ نہیں ملا", notFoundDescription: "یہ کیلکولیٹر صفحہ موجود نہیں۔ پتہ دیکھیں یا تمام کیلکولیٹرز پر واپس جائیں۔", returnToCalculators: "کیلکولیٹرز پر واپس جائیں"
+    notFoundTitle: "صفحہ نہیں ملا", notFoundDescription: "یہ کیلکولیٹر صفحہ موجود نہیں۔ پتہ دیکھیں یا تمام کیلکولیٹرز پر واپس جائیں۔", returnToCalculators: "کیلکولیٹرز پر واپس جائیں",
+    ramadanHeroEyebrow: "امانت / رمضان ٹولز اور پلانرز",
+    ramadanHeroTitle: "جامع رمضان ٹولز: ٹائمرز، پلانرز اور ٹریکرز",
+    ramadanHeroDescription: "۱۷ انٹرایکٹو رمضان ٹولز: سحری و افطاری ٹائمرز، ۳۰ پارے کی تلاوت کا ٹریکر، ڈیجیٹل تسبیح، صدقہ و بجٹ پلانر اور شبِ قدر کا جامع منصوبہ۔ تمام ڈیٹا آپ کے براؤزر میں محفوظ رہتا ہے۔",
+    namesHeroEyebrow: "امانت / اسلامی نام اور معانی",
+    namesHeroTitle: "اسلامی نام اور مستند معانی کا مرکز",
+    namesHeroDescription: "۱۳ اسلامی ناموں کے ٹولز مع ہر نام کے مکمل اور مستند معانی: بیبی نیم جنریٹر، قرآنی نام، جڑواں بچوں کے نام، جدید و روایتی نام اور آڈیو تلفظ۔"
   }
 };
