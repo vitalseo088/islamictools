@@ -24,6 +24,10 @@ import {
 import Calculator from "./components/Calculator";
 import MuslimNamesHub from "./components/MuslimNamesHub";
 import RamadanHub from "./components/RamadanHub";
+import HajjUmrahHub from "./components/HajjUmrahHub";
+import IslamicFinanceHub from "./components/IslamicFinanceHub";
+import { HalalFoodHub } from "./components/HalalFoodHub";
+import { IslamicPlannersHub } from "./components/IslamicPlannersHub";
 import { tools, toolBySlug, type Tool } from "./data/tools";
 import { categoryCopy, siteCopy, toolCopy, type Locale } from "./data/locales";
 
@@ -91,7 +95,7 @@ export default function App() {
         return hash;
       }
 
-      const match = path.match(/\/(?:calculators|muslim-names|ramadan-tools)\/([^/]+)/);
+      const match = path.match(/\/(?:calculators|muslim-names|ramadan-tools|hajj-umrah|islamic-finance|halal-food-tools|planners)\/([^/]+)/);
       if (match && match[1]) {
         return match[1];
       }
@@ -101,10 +105,14 @@ export default function App() {
     return null;
   };
 
-  const getSectionFromLocation = (): "calculators" | "ramadan" | "names" => {
+  const getSectionFromLocation = (): "calculators" | "islamic-finance" | "hajj-umrah" | "halal-food" | "planners" | "ramadan" | "names" => {
     try {
       const path = window.location.pathname;
       const hash = window.location.hash;
+      if (path.startsWith("/islamic-finance") || hash.includes("islamic-finance")) return "islamic-finance";
+      if (path.startsWith("/hajj-umrah") || hash.includes("hajj-umrah")) return "hajj-umrah";
+      if (path.startsWith("/halal-food-tools") || hash.includes("halal-food-tools")) return "halal-food";
+      if (path.startsWith("/planners") || hash.includes("planners")) return "planners";
       if (path.startsWith("/ramadan-tools") || hash.includes("ramadan-tools")) return "ramadan";
       if (path.startsWith("/muslim-names") || hash.includes("muslim-names")) return "names";
     } catch {
@@ -114,9 +122,13 @@ export default function App() {
   };
 
   const [currentSlug, setCurrentSlug] = useState<string | null>(getSlugFromLocation);
-  const [activePage, setActivePage] = useState<"calculators" | "ramadan" | "names">(() => {
+  const [activePage, setActivePage] = useState<"calculators" | "islamic-finance" | "hajj-umrah" | "halal-food" | "planners" | "ramadan" | "names">(() => {
     const slug = getSlugFromLocation();
     if (slug && toolBySlug[slug]) {
+      if (toolBySlug[slug].category === "Islamic Finance Tools") return "islamic-finance";
+      if (toolBySlug[slug].category === "Hajj & Umrah Tools") return "hajj-umrah";
+      if (toolBySlug[slug].category === "Halal Food Tools") return "halal-food";
+      if (toolBySlug[slug].category === "Islamic Planners & Trackers") return "planners";
       if (toolBySlug[slug].category === "Ramadan Tools") return "ramadan";
       if (toolBySlug[slug].category === "Muslim Names Tools") return "names";
       return "calculators";
@@ -148,7 +160,9 @@ export default function App() {
       setCurrentSlug(slug);
       const sec = getSectionFromLocation();
       if (slug && toolBySlug[slug]) {
-        if (toolBySlug[slug].category === "Ramadan Tools") setActivePage("ramadan");
+        if (toolBySlug[slug].category === "Islamic Finance Tools") setActivePage("islamic-finance");
+        else if (toolBySlug[slug].category === "Hajj & Umrah Tools") setActivePage("hajj-umrah");
+        else if (toolBySlug[slug].category === "Ramadan Tools") setActivePage("ramadan");
         else if (toolBySlug[slug].category === "Muslim Names Tools") setActivePage("names");
         else setActivePage("calculators");
       } else {
@@ -161,8 +175,16 @@ export default function App() {
 
   const navigateTo = (slug: string | null, sectionOrCategory?: string) => {
     setCurrentSlug(slug);
-    let newPage: "calculators" | "ramadan" | "names" = "calculators";
-    if (sectionOrCategory === "ramadan" || sectionOrCategory === "Ramadan Tools") {
+    let newPage: "calculators" | "islamic-finance" | "hajj-umrah" | "halal-food" | "planners" | "ramadan" | "names" = "calculators";
+    if (sectionOrCategory === "islamic-finance" || sectionOrCategory === "Islamic Finance Tools") {
+      newPage = "islamic-finance";
+    } else if (sectionOrCategory === "hajj-umrah" || sectionOrCategory === "Hajj & Umrah Tools") {
+      newPage = "hajj-umrah";
+    } else if (sectionOrCategory === "halal-food" || sectionOrCategory === "Halal Food Tools") {
+      newPage = "halal-food";
+    } else if (sectionOrCategory === "planners" || sectionOrCategory === "Islamic Planners & Trackers") {
+      newPage = "planners";
+    } else if (sectionOrCategory === "ramadan" || sectionOrCategory === "Ramadan Tools") {
       newPage = "ramadan";
     } else if (sectionOrCategory === "names" || sectionOrCategory === "Muslim Names Tools") {
       newPage = "names";
@@ -171,7 +193,11 @@ export default function App() {
       setSelectedCategory(sectionOrCategory);
     } else if (slug && toolBySlug[slug]) {
       const cat = toolBySlug[slug].category;
-      if (cat === "Ramadan Tools") newPage = "ramadan";
+      if (cat === "Islamic Finance Tools") newPage = "islamic-finance";
+      else if (cat === "Hajj & Umrah Tools") newPage = "hajj-umrah";
+      else if (cat === "Halal Food Tools") newPage = "halal-food";
+      else if (cat === "Islamic Planners & Trackers") newPage = "planners";
+      else if (cat === "Ramadan Tools") newPage = "ramadan";
       else if (cat === "Muslim Names Tools") newPage = "names";
       else {
         newPage = "calculators";
@@ -188,15 +214,35 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
     let targetUrl = "/calculators/";
     if (slug) {
+      const isFinanceTool = toolBySlug[slug]?.category === "Islamic Finance Tools";
+      const isHajjTool = toolBySlug[slug]?.category === "Hajj & Umrah Tools";
+      const isFoodTool = toolBySlug[slug]?.category === "Halal Food Tools";
+      const isPlannerTool = toolBySlug[slug]?.category === "Islamic Planners & Trackers";
       const isNameTool = toolBySlug[slug]?.category === "Muslim Names Tools";
       const isRamadanTool = toolBySlug[slug]?.category === "Ramadan Tools";
-      if (isRamadanTool) {
+      if (isFinanceTool) {
+        targetUrl = `/islamic-finance/${slug}/`;
+      } else if (isHajjTool) {
+        targetUrl = `/hajj-umrah/${slug}/`;
+      } else if (isFoodTool) {
+        targetUrl = `/halal-food-tools/${slug}/`;
+      } else if (isPlannerTool) {
+        targetUrl = `/planners/${slug}/`;
+      } else if (isRamadanTool) {
         targetUrl = `/ramadan-tools/${slug}/`;
       } else if (isNameTool) {
         targetUrl = `/muslim-names/${slug}/`;
       } else {
         targetUrl = `/calculators/${slug}/`;
       }
+    } else if (newPage === "islamic-finance") {
+      targetUrl = "/islamic-finance/";
+    } else if (newPage === "hajj-umrah") {
+      targetUrl = "/hajj-umrah/";
+    } else if (newPage === "halal-food") {
+      targetUrl = "/halal-food-tools/";
+    } else if (newPage === "planners") {
+      targetUrl = "/planners/";
     } else if (newPage === "names") {
       targetUrl = "/muslim-names/";
     } else if (newPage === "ramadan") {
@@ -212,10 +258,16 @@ export default function App() {
   const t = siteCopy[lang] || siteCopy.en;
   const isRtl = lang === "ar" || lang === "ur";
 
-  // Pure calculator tools (separated from Ramadan and Muslim Names)
+  // Pure calculator tools (separated from special hubs)
   const calculatorTools = useMemo(() => {
     return tools.filter(
-      (tool) => tool.category !== "Ramadan Tools" && tool.category !== "Muslim Names Tools"
+      (tool) =>
+        tool.category !== "Ramadan Tools" &&
+        tool.category !== "Muslim Names Tools" &&
+        tool.category !== "Hajj & Umrah Tools" &&
+        tool.category !== "Islamic Finance Tools" &&
+        tool.category !== "Halal Food Tools" &&
+        tool.category !== "Islamic Planners & Trackers"
     );
   }, []);
 
@@ -450,6 +502,38 @@ export default function App() {
               onClick={() => {
                 setSelectedCategory("all");
                 setSearchQuery("");
+                navigateTo(null, "islamic-finance");
+              }}
+              className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 relative py-1 ${
+                activePage === "islamic-finance"
+                  ? "text-[var(--primary)] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#AE2448]"
+                  : "text-[var(--ink)] hover:text-[var(--primary)]"
+              }`}
+            >
+              {t.finance}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedCategory("all");
+                setSearchQuery("");
+                navigateTo(null, "hajj-umrah");
+              }}
+              className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 relative py-1 ${
+                activePage === "hajj-umrah"
+                  ? "text-[var(--primary)] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#AE2448]"
+                  : "text-[var(--ink)] hover:text-[var(--primary)]"
+              }`}
+            >
+              {t.hajjUmrah}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedCategory("all");
+                setSearchQuery("");
                 navigateTo(null, "ramadan");
               }}
               className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 relative py-1 ${
@@ -466,15 +550,31 @@ export default function App() {
               onClick={() => {
                 setSelectedCategory("all");
                 setSearchQuery("");
-                navigateTo(null, "names");
+                navigateTo(null, "halal-food");
               }}
               className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 relative py-1 ${
-                activePage === "names"
+                activePage === "halal-food"
                   ? "text-[var(--primary)] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#AE2448]"
                   : "text-[var(--ink)] hover:text-[var(--primary)]"
               }`}
             >
-              {t.names}
+              {t.food}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedCategory("all");
+                setSearchQuery("");
+                navigateTo(null, "planners");
+              }}
+              className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 relative py-1 ${
+                activePage === "planners"
+                  ? "text-[var(--primary)] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#AE2448]"
+                  : "text-[var(--ink)] hover:text-[var(--primary)]"
+              }`}
+            >
+              {t.planners || "Planners"}
             </button>
 
             {/* More Dropdown */}
@@ -523,6 +623,62 @@ export default function App() {
                       </div>
                       <p className="mt-0.5 text-xs text-[var(--muted)] leading-relaxed m-0">
                         {lang === "ar" ? "حاسبات الزكاة والصلاة والقرآن والميراث" : lang === "ur" ? "زکوٰۃ، نماز، قرآن اور وراثت کے کیلکولیٹرز" : "Zakat, prayers, Quran pacing & inheritance"}
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Islamic Finance Tools link in dropdown */}
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                      setIsMoreOpen(false);
+                      setSearchQuery("");
+                      navigateTo(null, "islamic-finance");
+                    }}
+                    className="group w-full flex items-start gap-3 rounded-xl p-3 text-left transition-all duration-200 hover:bg-[#F2EAE0]/50 cursor-pointer border-0 bg-transparent"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#AE2448] text-white shadow-xs group-hover:scale-105 transition-transform">
+                      <Coins className="h-4 w-4" />
+                    </span>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-[var(--ink)] group-hover:text-[var(--primary)] transition-colors">
+                          {t.finance}
+                        </span>
+                        <span className="rounded-full bg-[#AE2448]/15 px-2 py-0.5 text-[10px] font-bold text-[#AE2448]">
+                          15 {t.tools}
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-xs text-[var(--muted)] leading-relaxed m-0">
+                        {lang === "ar" ? "حاسبات الاستثمار والزكاة والمرابحة والمهر والوقف" : lang === "ur" ? "حلال سرمایہ کاری، زکوٰۃ، مرابحہ، مہر اور وقف" : "Halal investments, stock Zakat, Murabaha & Waqf"}
+                      </p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                      setIsMoreOpen(false);
+                      setSearchQuery("");
+                      navigateTo(null, "hajj-umrah");
+                    }}
+                    className="group w-full flex items-start gap-3 rounded-xl p-3 text-left transition-all duration-200 hover:bg-[#F2EAE0]/50 cursor-pointer border-0 bg-transparent"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#AE2448] text-white shadow-xs group-hover:scale-105 transition-transform">
+                      <Compass className="h-4 w-4" />
+                    </span>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-[var(--ink)] group-hover:text-[var(--primary)] transition-colors">
+                          {t.hajjUmrah}
+                        </span>
+                        <span className="rounded-full bg-[#AE2448]/15 px-2 py-0.5 text-[10px] font-bold text-[#AE2448]">
+                          19 {t.tools}
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-xs text-[var(--muted)] leading-relaxed m-0">
+                        {lang === "ar" ? "عدادات الطواف والسعي والمناسك وقوائم الأمتعة" : lang === "ur" ? "طواف و سعی کاؤنٹرز، پیکنگ چیک لسٹ اور مناسک" : "Tawaf & Sa'i counters, packing lists & guides"}
                       </p>
                     </div>
                   </button>
@@ -679,6 +835,32 @@ export default function App() {
             onClick={() => {
               setSelectedCategory("all");
               setSearchQuery("");
+              navigateTo(null, "islamic-finance");
+            }}
+            className={`whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 ${
+              activePage === "islamic-finance" ? "text-[var(--primary)] font-bold" : "text-[var(--ink)]"
+            }`}
+          >
+            {t.finance}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedCategory("all");
+              setSearchQuery("");
+              navigateTo(null, "hajj-umrah");
+            }}
+            className={`whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 ${
+              activePage === "hajj-umrah" ? "text-[var(--primary)] font-bold" : "text-[var(--ink)]"
+            }`}
+          >
+            {t.hajjUmrah}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedCategory("all");
+              setSearchQuery("");
               navigateTo(null, "ramadan");
             }}
             className={`whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 ${
@@ -711,7 +893,217 @@ export default function App() {
 
       {/* Main Content */}
       <main id="main-content" className="flex-1">
-        {/* PAGE 1: RAMADAN TOOLS */}
+        {/* PAGE 0: ISLAMIC FINANCE TOOLS */}
+        {activePage === "islamic-finance" && (
+          <div>
+            {/* Breadcrumb */}
+            <div className="page-shell pt-5">
+              <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-[var(--muted)]">
+                <button
+                  type="button"
+                  onClick={() => navigateTo(null, "calculators")}
+                  className="underline decoration-[#cfd3db] underline-offset-4 hover:text-[var(--primary)] border-0 bg-transparent p-0 cursor-pointer text-xs text-[var(--muted)]"
+                >
+                  {t.home}
+                </button>
+                <span aria-hidden="true">/</span>
+                <span className="font-semibold text-[var(--ink)]">{t.finance}</span>
+              </nav>
+            </div>
+
+            {/* Islamic Finance Dedicated Page Hero */}
+            <section className="quiet-grid border-b border-[var(--line)] bg-[var(--canvas)]">
+              <div className="page-shell py-12 md:py-16">
+                <p className="eyebrow mb-4">{t.financeHeroEyebrow}</p>
+                <h1 className="max-w-3xl text-4xl font-semibold leading-[1.12] tracking-[-.045em] text-[var(--ink)] md:text-[3.4rem]">
+                  {t.financeHeroTitle}
+                </h1>
+                <p className="mt-5 max-w-2xl text-base leading-7 text-[var(--muted)] md:text-lg">
+                  {t.financeHeroDescription}
+                </p>
+                <div className="mt-8 flex flex-wrap gap-3 text-xs font-semibold text-[var(--primary)]">
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                    {lang === "ar" ? "١٥ حاسبة للمالية الإسلامية والمال الحلال" : lang === "ur" ? "۱۵ اسلامی مالیات ٹولز" : "15 Dedicated Islamic Finance Tools"}
+                  </span>
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                    {t.privateInputs}
+                  </span>
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                    {lang === "ar" ? "حسابات بدون ربا مطابقة للشريعة" : lang === "ur" ? "ربا سے پاک شرعی حسابات" : "Riba-Free Sharia-Compliant Estimates"}
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            {/* Islamic Finance Interactive Hub Component */}
+            <div className="page-shell py-12">
+              <IslamicFinanceHub currentTool={activeTool || undefined} onSelectTool={(slug) => navigateTo(slug, "islamic-finance")} lang={lang} />
+            </div>
+
+            {/* Practical Guidance Note */}
+            <section className="border-t border-[#F2EAE0] bg-[#F2EAE0]/40 py-12">
+              <div className="page-shell">
+                <aside className="flex flex-col justify-between gap-6 rounded-3xl border border-[#F2EAE0] bg-white p-8 shadow-xs md:flex-row md:items-center">
+                  <div className="max-w-2xl">
+                    <p className="eyebrow mb-2">{t.estimateEyebrow}</p>
+                    <h2 className="text-xl font-bold text-[var(--ink)] m-0">{t.estimateTitle}</h2>
+                    <p className="mt-2 text-sm text-[var(--muted)] leading-relaxed m-0">
+                      {t.privacyNotice}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => navigateTo(null, "calculators")}
+                    className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[var(--primary)] px-5 py-3 text-xs font-bold !text-white shadow-xs cursor-pointer border-0 hover:bg-[var(--primary-hover)] transition-colors"
+                  >
+                    <span>{t.browseAll}</span>
+                    <ArrowRight className={`h-4 w-4 ${isRtl ? "rotate-180" : ""}`} />
+                  </button>
+                </aside>
+              </div>
+            </section>
+          </div>
+        )}
+        {/* PAGE 0: HAJJ & UMRAH TOOLS */}
+        {activePage === "hajj-umrah" && (
+          <div>
+            {/* Breadcrumb */}
+            <div className="page-shell pt-5">
+              <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-[var(--muted)]">
+                <button
+                  type="button"
+                  onClick={() => navigateTo(null, "calculators")}
+                  className="underline decoration-[#cfd3db] underline-offset-4 hover:text-[var(--primary)] border-0 bg-transparent p-0 cursor-pointer text-xs text-[var(--muted)]"
+                >
+                  {t.home}
+                </button>
+                <span aria-hidden="true">/</span>
+                <span className="font-semibold text-[var(--ink)]">{t.hajjUmrah}</span>
+              </nav>
+            </div>
+
+            {/* Hajj & Umrah Dedicated Page Hero */}
+            <section className="quiet-grid border-b border-[var(--line)] bg-[var(--canvas)]">
+              <div className="page-shell py-12 md:py-16">
+                <p className="eyebrow mb-4">{t.hajjUmrahHeroEyebrow}</p>
+                <h1 className="max-w-3xl text-4xl font-semibold leading-[1.12] tracking-[-.045em] text-[var(--ink)] md:text-[3.4rem]">
+                  {t.hajjUmrahHeroTitle}
+                </h1>
+                <p className="mt-5 max-w-2xl text-base leading-7 text-[var(--muted)] md:text-lg">
+                  {t.hajjUmrahHeroDescription}
+                </p>
+                <div className="mt-8 flex flex-wrap gap-3 text-xs font-semibold text-[var(--primary)]">
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                    {lang === "ar" ? "١٩ أداة ومخططاً للحج والعمرة" : lang === "ur" ? "۱۹ حج و عمرہ ٹولز" : "19 Dedicated Hajj & Umrah Tools"}
+                  </span>
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                    {t.privateInputs}
+                  </span>
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                    {lang === "ar" ? "عدادات طواف وسعي تفاعلية" : lang === "ur" ? "لائیو طواف و سعی کاؤنٹرز" : "Interactive Tawaf & Sa'i Counters"}
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            {/* Hajj & Umrah Interactive Hub Component */}
+            <div className="page-shell py-12">
+              <HajjUmrahHub currentTool={activeTool || undefined} onSelectTool={(slug) => navigateTo(slug, "hajj-umrah")} lang={lang} />
+            </div>
+          </div>
+        )}
+
+        {/* PAGE 0: HALAL FOOD & INGREDIENT TOOLS */}
+        {activePage === "halal-food" && (
+          <div>
+            {/* Breadcrumb */}
+            <div className="page-shell pt-5">
+              <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-[var(--muted)]">
+                <button
+                  type="button"
+                  onClick={() => navigateTo(null, "calculators")}
+                  className="underline decoration-[#cfd3db] underline-offset-4 hover:text-[var(--primary)] border-0 bg-transparent p-0 cursor-pointer text-xs text-[var(--muted)]"
+                >
+                  {t.home}
+                </button>
+                <span aria-hidden="true">/</span>
+                <span className="font-semibold text-[var(--ink)]">{t.food}</span>
+              </nav>
+            </div>
+
+            {/* Halal Food Page Hero */}
+            <section className="quiet-grid border-b border-[var(--line)] bg-[var(--canvas)]">
+              <div className="page-shell py-12 md:py-16">
+                <p className="eyebrow mb-4">{t.foodHeroEyebrow || "BARAKAHDAILY / HALAL FOOD TOOLS"}</p>
+                <h1 className="max-w-3xl text-4xl font-semibold leading-[1.12] tracking-[-.045em] text-[var(--ink)] md:text-[3.4rem]">
+                  {t.foodHeroTitle || "Halal Food & Ingredient Suite"}
+                </h1>
+                <p className="mt-5 max-w-2xl text-base leading-7 text-[var(--muted)] md:text-lg">
+                  {t.foodHeroDescription || "Explore 12 Halal Food tools: E-Number directory, ingredient scanners, gelatin & additive origin checkers."}
+                </p>
+                <div className="mt-8 flex flex-wrap gap-3 text-xs font-semibold text-[var(--primary)]">
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                    {lang === "ar" ? "١٢ أداة لفحص الأغذية والمكونات" : lang === "ur" ? "۱۲ حلال فوڈ ٹولز" : "12 Dedicated Halal Food Tools"}
+                  </span>
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                    {lang === "ar" ? "دليل الأرقام والمواد المضافة E-Numbers" : lang === "ur" ? "E-نمبرز اور اجزاء کی تصدیق" : "Verified E-Number Directory"}
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            {/* Halal Food Interactive Hub */}
+            <div className="page-shell py-12">
+              <HalalFoodHub currentTool={activeTool || undefined} onSelectTool={(slug) => navigateTo(slug, "halal-food")} lang={lang} />
+            </div>
+          </div>
+        )}
+
+        {/* PAGE 0: ISLAMIC PLANNERS & TRACKERS */}
+        {activePage === "planners" && (
+          <div>
+            {/* Breadcrumb */}
+            <div className="page-shell pt-5">
+              <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-[var(--muted)]">
+                <button
+                  type="button"
+                  onClick={() => navigateTo(null, "calculators")}
+                  className="underline decoration-[#cfd3db] underline-offset-4 hover:text-[var(--primary)] border-0 bg-transparent p-0 cursor-pointer text-xs text-[var(--muted)]"
+                >
+                  {t.home}
+                </button>
+                <span aria-hidden="true">/</span>
+                <span className="font-semibold text-[var(--ink)]">{t.planners || "Planners"}</span>
+              </nav>
+            </div>
+
+            {/* Planners Page Hero */}
+            <section className="quiet-grid border-b border-[var(--line)] bg-[var(--canvas)]">
+              <div className="page-shell py-12 md:py-16">
+                <p className="eyebrow mb-4">{t.plannersHeroEyebrow || "BARAKAHDAILY / ISLAMIC PLANNERS"}</p>
+                <h1 className="max-w-3xl text-4xl font-semibold leading-[1.12] tracking-[-.045em] text-[var(--ink)] md:text-[3.4rem]">
+                  {t.plannersHeroTitle || "Islamic Planners & Trackers"}
+                </h1>
+                <p className="mt-5 max-w-2xl text-base leading-7 text-[var(--muted)] md:text-lg">
+                  {t.plannersHeroDescription || "Complete suite of 15 spiritual planners, Hifz trackers, Salah loggers, Dhikr counters, and habit streak boards."}
+                </p>
+                <div className="mt-8 flex flex-wrap gap-3 text-xs font-semibold text-[var(--primary)]">
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                    {lang === "ar" ? "١٥ مخططاً وتتبعاً إيمانياً" : lang === "ur" ? "۱۵ اسلامی ٹریکرز" : "15 Dedicated Spiritual Trackers"}
+                  </span>
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                    {t.privateInputs}
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            {/* Islamic Planners Interactive Hub */}
+            <div className="page-shell py-12">
+              <IslamicPlannersHub currentTool={activeTool || undefined} onSelectTool={(slug) => navigateTo(slug, "planners")} lang={lang} />
+            </div>
+          </div>
+        )}
         {activePage === "ramadan" && (
           <div>
             {/* Breadcrumb */}
@@ -740,13 +1132,13 @@ export default function App() {
                   {t.ramadanHeroDescription}
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3 text-xs font-semibold text-[var(--primary)]">
-                  <span className="rounded-full border border-[#F2EAE0] bg-[#F2EAE0]/70 text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
                     {lang === "ar" ? "١٧ أداة ومخططاً لرمضان" : lang === "ur" ? "۱۷ انٹرایکٹو ٹولز" : "17 Dedicated Ramadan Tools"}
                   </span>
-                  <span className="rounded-full border border-[#F2EAE0] bg-[#F2EAE0]/70 text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
                     {t.privateInputs}
                   </span>
-                  <span className="rounded-full border border-[#F2EAE0] bg-[#F2EAE0]/70 text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
                     {lang === "ar" ? "مؤقتات وأدعية مباشرة" : lang === "ur" ? "لائیو ٹائمرز اور دعائیں" : "Live Timers & Duas"}
                   </span>
                 </div>
@@ -818,13 +1210,13 @@ export default function App() {
                   {t.namesHeroDescription}
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3 text-xs font-semibold text-[var(--primary)]">
-                  <span className="rounded-full border border-[#F2EAE0] bg-[#F2EAE0]/70 text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
                     {lang === "ar" ? "١٣ أداة متخصصة للأسماء" : lang === "ur" ? "۱۳ ناموں کے ٹولز" : "13 Dedicated Name Tools"}
                   </span>
-                  <span className="rounded-full border border-[#F2EAE0] bg-[#F2EAE0]/70 text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
                     {lang === "ar" ? "المعاني الكاملة لكل اسم" : lang === "ur" ? "ہر نام کا مستند معنی" : "Meanings on Every Name"}
                   </span>
-                  <span className="rounded-full border border-[#F2EAE0] bg-[#F2EAE0]/70 text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                  <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
                     {lang === "ar" ? "نطق صوتي وأصول لغوية" : lang === "ur" ? "آڈیو تلفظ اور لسانی بنیاد" : "Audio Pronunciation & Origins"}
                   </span>
                 </div>
@@ -961,7 +1353,7 @@ export default function App() {
                             type="button"
                             key={item.slug}
                             onClick={() => navigateTo(item.slug, "calculators")}
-                            className="group text-left relative flex min-h-[200px] flex-col justify-between rounded-2xl border border-[#F2EAE0] bg-white p-5 sm:p-6 no-underline interactive-card hover:border-[#AE2448] hover:bg-[#F2EAE0]/40 cursor-pointer"
+                            className="group text-left relative flex min-h-[200px] flex-col justify-between rounded-2xl border border-[#E6D8BA] bg-[#FFF6DE] p-5 sm:p-6 no-underline interactive-card hover:border-[#AE2448] hover:bg-[#FFEFC2] cursor-pointer"
                           >
                             <div>
                               <div className="flex items-center justify-between gap-2 mb-3">
@@ -981,7 +1373,7 @@ export default function App() {
                                 {localizedToolShort(item)}
                               </p>
                             </div>
-                            <div className="mt-4 pt-3.5 border-t border-[#F2EAE0] flex items-center justify-between">
+                            <div className="mt-4 pt-3.5 border-t border-[#E6D8BA] flex items-center justify-between">
                               <span className="text-xs font-bold text-[#6E1A37] group-hover:text-[var(--primary)] transition-colors">
                                 {t.open}
                               </span>
@@ -1035,13 +1427,13 @@ export default function App() {
                       {t.heroDescription}
                     </p>
                     <div className="mt-8 flex flex-wrap gap-3 text-xs font-semibold text-[var(--primary)]">
-                      <span className="rounded-full border border-[#F2EAE0] bg-[#F2EAE0]/70 text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                      <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
                         {t.practicalTools}
                       </span>
-                      <span className="rounded-full border border-[#F2EAE0] bg-[#F2EAE0]/70 text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                      <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
                         {t.privateInputs}
                       </span>
-                      <span className="rounded-full border border-[#F2EAE0] bg-[#F2EAE0]/70 text-[var(--ink)] px-3.5 py-2 shadow-xs">
+                      <span className="rounded-full border border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] px-3.5 py-2 shadow-xs">
                         {t.notRulings}
                       </span>
                     </div>
@@ -1090,10 +1482,10 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => setSelectedCategory("all")}
-                      className={`rounded-full px-3.5 py-2 text-xs font-bold transition-all duration-200 cursor-pointer border ${
+                      className={`rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 cursor-pointer border ${
                         selectedCategory === "all"
-                          ? "bg-[var(--primary)] !text-white border-[var(--primary)] shadow-xs"
-                          : "bg-white text-[var(--ink)] border-[#F2EAE0] hover:border-[#AE2448] hover:bg-[#F2EAE0]/50"
+                          ? "bg-[#6E1A37] !text-white border-[#6E1A37] shadow-xs"
+                          : "bg-[#FFF6DE] text-[var(--ink)] border-[#E6D8BA] hover:border-[#AE2448] hover:bg-[#FFEFC2]"
                       }`}
                     >
                       <span>{lang === "ar" ? "كل الحاسبات" : lang === "ur" ? "تمام کیلکولیٹرز" : "All Calculators"}</span>
@@ -1109,10 +1501,10 @@ export default function App() {
                           type="button"
                           key={group}
                           onClick={() => setSelectedCategory(isSelected ? "all" : group)}
-                          className={`rounded-full px-3.5 py-2 text-xs font-bold transition-all duration-200 cursor-pointer border ${
+                          className={`rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 cursor-pointer border ${
                             isSelected
-                              ? "bg-[var(--primary)] !text-white border-[var(--primary)] shadow-xs"
-                              : "bg-white text-[var(--ink)] border-[#F2EAE0] hover:border-[#AE2448] hover:bg-[#F2EAE0]/50"
+                              ? "bg-[#6E1A37] !text-white border-[#6E1A37] shadow-xs"
+                              : "bg-[#FFF6DE] text-[var(--ink)] border-[#E6D8BA] hover:border-[#AE2448] hover:bg-[#FFEFC2]"
                           }`}
                         >
                           <span>{localizedCategory(group)}</span>
@@ -1152,7 +1544,7 @@ export default function App() {
                                   type="button"
                                   key={tool.slug}
                                   onClick={() => navigateTo(tool.slug, "calculators")}
-                                  className="group text-left relative flex min-h-[200px] flex-col justify-between rounded-2xl border border-[#F2EAE0] bg-white p-5 sm:p-6 no-underline interactive-card hover:border-[#AE2448] hover:bg-[#F2EAE0]/40 cursor-pointer"
+                                  className="group text-left relative flex min-h-[200px] flex-col justify-between rounded-2xl border border-[#E6D8BA] bg-[#FFF6DE] p-5 sm:p-6 no-underline interactive-card hover:border-[#AE2448] hover:bg-[#FFEFC2] cursor-pointer"
                                 >
                                   <div>
                                     {/* Header: Icon + Category + Number */}
@@ -1182,7 +1574,7 @@ export default function App() {
                                   </div>
 
                                   {/* Tidy Bottom Action Bar */}
-                                  <div className="mt-4 pt-3.5 border-t border-[#F2EAE0] flex items-center justify-between">
+                                  <div className="mt-4 pt-3.5 border-t border-[#E6D8BA] flex items-center justify-between">
                                     <span className="text-xs font-bold text-[#6E1A37] group-hover:text-[var(--primary)] transition-colors">
                                       {t.openCalculator}
                                     </span>

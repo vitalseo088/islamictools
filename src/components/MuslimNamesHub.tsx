@@ -864,14 +864,14 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
         </div>
 
         {/* Alphabet Bar with localized letters */}
-        <div className="pt-2 border-t border-[#F2EAE0] flex items-center gap-1 overflow-x-auto pb-1 scrollbar-thin">
+        <div className="pt-2 border-t border-[#E6D8BA] flex items-center gap-1 overflow-x-auto pb-1 scrollbar-thin">
           <button
             type="button"
             onClick={() => setSelectedLetter("all")}
             className={`px-3 py-1 rounded-md text-xs font-bold shrink-0 transition-colors cursor-pointer border ${
               selectedLetter === "all"
-                ? "bg-[var(--primary)] text-white border-[var(--primary)]"
-                : "bg-white text-[var(--ink)] border-[#F2EAE0] hover:border-[#AE2448]"
+                ? "bg-[#6E1A37] text-white border-[#6E1A37]"
+                : "bg-[#FFF6DE] text-[var(--ink)] border-[#E6D8BA] hover:border-[#AE2448] hover:bg-[#FFEFC2]"
             }`}
           >
             {t.all}
@@ -885,8 +885,8 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
                 onClick={() => setSelectedLetter(isSelected ? "all" : letter)}
                 className={`h-7 min-w-7 px-1.5 rounded-md text-xs font-bold shrink-0 flex items-center justify-center transition-colors cursor-pointer border ${
                   isSelected
-                    ? "bg-[var(--primary)] text-white border-[var(--primary)]"
-                    : "bg-white text-[var(--ink)] border-[#F2EAE0] hover:border-[#AE2448]"
+                    ? "bg-[#6E1A37] text-white border-[#6E1A37]"
+                    : "bg-[#FFF6DE] text-[var(--ink)] border-[#E6D8BA] hover:border-[#AE2448] hover:bg-[#FFEFC2]"
                 }`}
               >
                 {letter}
@@ -897,7 +897,7 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
       </section>
 
       {/* Results Header with Count */}
-      <div className="flex items-center justify-between border-b border-[#F2EAE0] pb-3">
+      <div className="flex items-center justify-between border-b border-[#E6D8BA] pb-3">
         <div>
           <h3 className="m-0 text-xl font-bold tracking-tight text-[var(--ink)]">
             {activeSlug === "muslim-baby-name-generator" ? t.generatedSuggestions : t.curatedNames}
@@ -920,7 +920,7 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
           return (
             <article
               key={item.id}
-              className="interactive-card relative flex flex-col justify-between rounded-2xl border border-[#F2EAE0] bg-white p-5 sm:p-6 hover:border-[#AE2448]"
+              className="interactive-card relative flex flex-col justify-between rounded-2xl border border-[#E6D8BA] bg-[#FFF6DE] p-5 sm:p-6 hover:border-[#AE2448] hover:bg-[#FFEFC2]"
             >
               <div>
                 {/* Header: Badges */}

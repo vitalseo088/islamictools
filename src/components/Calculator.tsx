@@ -1298,7 +1298,7 @@ export default function Calculator({ tool }: { tool: Tool }) {
 
         {/* Result Note (Notice with highlights background & secondary left border) */}
         {result.note && (
-          <div className="mt-5 rounded-xl border border-[#AE2448]/30 border-s-4 border-s-[#AE2448] bg-[#AE2448]/10 p-3.5 text-xs font-medium leading-5 text-[var(--ink)]">
+          <div className="mt-5 rounded-xl border border-[#AE2448]/30 border-s-4 border-s-[#AE2448] bg-[#FFF6DE] p-3.5 text-xs font-medium leading-5 text-[var(--ink)]">
             {result.note}
           </div>
         )}

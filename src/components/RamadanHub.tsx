@@ -824,7 +824,7 @@ export default function RamadanHub({ currentTool, onSelectTool, lang = "en" }: R
                 className={`flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold transition-all duration-200 cursor-pointer border ${
                   isSelected
                     ? "border-[#6E1A37] bg-[#6E1A37] !text-white shadow-sm scale-102"
-                    : "border-[var(--line)] bg-white text-[var(--ink)] hover:border-[#6E1A37]/40 hover:bg-[#F2EAE0]/30"
+                    : "border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] hover:border-[#AE2448] hover:bg-[#FFEFC2]"
                 }`}
               >
                 <Icon className={`h-4 w-4 ${isSelected ? "!text-white" : "text-[#6E1A37]"}`} />
