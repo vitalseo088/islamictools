@@ -9,7 +9,8 @@ import {
   Users,
   Shuffle,
   Filter,
-  X
+  X,
+  ArrowRight
 } from "lucide-react";
 import {
   muslimNames,
@@ -30,7 +31,7 @@ import {
   type Style,
   type Origin
 } from "../data/names";
-import type { Tool } from "../data/tools";
+import { Tool, tools } from "../data/tools";
 import type { Locale } from "../data/locales";
 
 interface MuslimNamesHubProps {
@@ -293,9 +294,14 @@ const twinHarmonies: Record<string, { en: string; ar: string; ur: string }> = {
 };
 
 export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" }: MuslimNamesHubProps) {
-  const activeSlug = currentTool?.slug || "islamic-name-finder";
+  const activeSlug = currentTool?.slug || "";
   const t = hubCopy[lang] || hubCopy.en;
   const isRtl = lang === "ar" || lang === "ur";
+
+  const nameTools = useMemo(
+    () => tools.filter((tool) => tool.category === "Muslim Names Tools"),
+    []
+  );
 
   // Search & Filter State
   const [search, setSearch] = useState("");
@@ -510,42 +516,72 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
 
   return (
     <div className={`space-y-10 ${isRtl ? "rtl" : "ltr"}`}>
-      {/* Tool Navigation Pill Strip */}
-      <nav aria-label="Muslim Name Tools Selection" className="overflow-x-auto pb-2 scrollbar-thin">
-        <div className="flex items-center gap-2 min-w-max p-1.5 bg-white rounded-2xl border border-[#F2EAE0] shadow-2xs">
-          {[
-            { slug: "islamic-name-finder", label: t.finderTab },
-            { slug: "muslim-baby-name-generator", label: t.babyGenTab },
-            { slug: "arabic-name-meaning-tool", label: t.meaningsTab },
-            { slug: "muslim-boy-names", label: t.boyNamesTab },
-            { slug: "muslim-girl-names", label: t.girlNamesTab },
-            { slug: "quranic-names-finder", label: t.quranicTab },
-            { slug: "twin-muslim-name-generator", label: t.twinGenTab },
-            { slug: "names-by-meaning", label: t.byMeaningTab },
-            { slug: "names-by-letter", label: t.byLetterTab },
-            { slug: "names-by-origin", label: t.byOriginTab },
-            { slug: "rare-muslim-name-finder", label: t.rareTab },
-            { slug: "modern-muslim-name-finder", label: t.modernTab },
-            { slug: "traditional-muslim-name-finder", label: t.traditionalTab }
-          ].map((item) => {
-            const isActive = activeSlug === item.slug;
-            return (
-              <button
-                key={item.slug}
-                type="button"
-                onClick={() => onSelectTool(item.slug)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer border flex items-center gap-1.5 ${
-                  isActive
-                    ? "bg-[var(--primary)] text-white border-[var(--primary)] shadow-xs scale-100"
-                    : "bg-transparent text-[var(--ink)] border-transparent hover:bg-[#F2EAE0]/50 hover:text-[var(--primary)]"
-                }`}
-              >
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
+      {/* Section Sub-Header & Back Button */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E6D8BA] pb-4">
+        <div className="flex items-center gap-2">
+          {activeSlug && (
+            <button
+              type="button"
+              onClick={() => onSelectTool("")}
+              className="rounded-xl border border-[#E6D8BA] bg-[#FFF6DE] px-3.5 py-1.5 text-xs font-bold text-[#6E1A37] hover:bg-[#FFEFC2] transition-colors cursor-pointer"
+            >
+              {lang === "ar" ? "← جميع أدوات الأسماء الإسلامية" : lang === "ur" ? "← تمام اسلامی ناموں کے ٹولز" : "← All Muslim Name Tools"}
+            </button>
+          )}
+          <span className="text-xs font-bold text-[#6E1A37]">
+            {lang === "ar" ? "١٣ أداة ومولداً لأسماء المواليد والتوائم والمعاني" : lang === "ur" ? "۱۳ اسلامی ناموں کے ٹولز" : "13 Dedicated Muslim Name Tools"}
+          </span>
         </div>
-      </nav>
+      </div>
+
+      {/* VIEW 1: DIRECTORY GRID OF ALL 13 MUSLIM NAME TOOLS (SIGNATURE CARDS) */}
+      {!activeSlug && (
+        <div className="space-y-6">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {nameTools.map((tool, idx) => (
+              <button
+                type="button"
+                key={tool.slug}
+                onClick={() => onSelectTool(tool.slug)}
+                className="group text-left relative flex min-h-[200px] flex-col justify-between rounded-2xl border border-[#E6D8BA] bg-[#FFF6DE] p-5 sm:p-6 no-underline interactive-card hover:border-[#AE2448] hover:bg-[#FFEFC2] cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-3 mb-3">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#AE2448] text-white shadow-xs transition-transform duration-200 group-hover:scale-105">
+                        <Sparkles className="h-4 w-4" aria-hidden="true" />
+                      </span>
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#6E1A37]">
+                        {lang === "ar" ? "أداة الأسماء" : "Name Tool"}
+                      </span>
+                    </div>
+                    <span className="font-mono text-xs font-bold text-[#6E1A37]/60">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+
+                  <h4 className="mb-1.5 text-base sm:text-lg font-bold leading-snug tracking-[-.02em] text-[var(--ink)] group-hover:text-[var(--primary)] transition-colors">
+                    {tool.title}
+                  </h4>
+
+                  <p className="m-0 text-xs sm:text-sm leading-relaxed text-[#262626]">
+                    {tool.short}
+                  </p>
+                </div>
+
+                <div className="mt-4 pt-3.5 border-t border-[#E6D8BA] flex items-center justify-between">
+                  <span className="text-xs font-bold text-[#6E1A37] group-hover:text-[var(--primary)] transition-colors">
+                    {lang === "ar" ? "افتح الأداة" : "Open Name Tool"}
+                  </span>
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#AE2448] text-white group-hover:bg-[var(--primary)] group-hover:text-white transition-all duration-200 shadow-xs">
+                    <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180 transition-transform duration-200 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* SPECIAL MODE: Twin Muslim Name Generator */}
       {activeSlug === "twin-muslim-name-generator" ? (

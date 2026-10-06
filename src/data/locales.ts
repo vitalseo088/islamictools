@@ -80,7 +80,7 @@ export const categoryCopy: Record<string, Record<Exclude<Locale, "en">, string>>
 
 export const siteCopy: Record<Locale, Record<string, string>> = {
   en: {
-    calculators: "Calculators", hajjUmrah: "Hajj & Umrah", ramadan: "Ramadan Tools", names: "Muslim Names", finance: "Islamic Finance", food: "Food", more: "More", home: "Home", allTools: "All calculators", footerNote: "Thoughtful estimates for everyday questions.",
+    calculators: "Calculators", hajjUmrah: "Hajj & Umrah", ramadan: "Ramadan Tools", names: "Muslim Names", finance: "Islamic Finance", food: "Food", more: "More", alQuran: "Al-Quran", toolsMenu: "Tools", donations: "Donations", home: "Home", allTools: "All calculators", footerNote: "Thoughtful estimates for everyday questions.",
     breadcrumbCategory: "Islamic Calculators", heroEyebrow: "BARAKAHDAILY / ISLAMIC CALCULATORS & TOOLS", heroTitle: "Faithful Calculations for Worship, Giving & Financial Life",
     heroDescription: "Practical, private estimates for Zakat on wealth, gold, silver, investments, prayer times, Quran pacing, and family planning. All calculations remain 100% in your browser.",
     practicalTools: "18 dedicated calculators", privateInputs: "100% private in browser", notRulings: "Practical estimates, not fatwas", exploreEyebrow: "EXPLORE CALCULATORS",
@@ -111,7 +111,7 @@ export const siteCopy: Record<Locale, Record<string, string>> = {
     planners: "Planners & Trackers"
   },
   ar: {
-    calculators: "الحاسبات", hajjUmrah: "الحج والعمرة", ramadan: "أدوات رمضان", names: "الأسماء الإسلامية", finance: "المالية الإسلامية", food: "الطعام", more: "المزيد", home: "الرئيسية", allTools: "كل الحاسبات", footerNote: "تقديرات متأنية لأسئلة الحياة اليومية.",
+    calculators: "الحاسبات", hajjUmrah: "الحج والعمرة", ramadan: "أدوات رمضان", names: "الأسماء الإسلامية", finance: "المالية الإسلامية", food: "الطعام", more: "المزيد", alQuran: "القرآن", toolsMenu: "الأدوات", donations: "التبرعات", home: "الرئيسية", allTools: "كل الحاسبات", footerNote: "تقديرات متأنية لأسئلة الحياة اليومية.",
     breadcrumbCategory: "الحاسبات الإسلامية", heroEyebrow: "بركة دايلي / الحاسبات والمقدِّرات الإسلامية", heroTitle: "حسابات إسلامية موثوقة للزكاة والعبادة والعطاء والمال.",
     heroDescription: "حاسبات دقيقة ومجانية لحساب زكاة المال والذهب والاستثمار ومواقيت الصلاة وختم القرآن والميراث بخصوصية تامة في متصفحك.",
     practicalTools: "١٨ حاسبة إسلامية متخصصة", privateInputs: "تبقى مدخلاتك في متصفحك محلياً", notRulings: "تقديرات عملية وليست فتاوى", exploreEyebrow: "استكشف الحاسبات",
@@ -135,7 +135,7 @@ export const siteCopy: Record<Locale, Record<string, string>> = {
     namesHeroDescription: "استكشف ١٣ أداة لأسماء الأولاد والبنات مع عرض المعاني الدقيقة لكل اسم، وجذورها اللغوية، والأسماء القرآنية والتوأمية والنادرة والحديثة مع النطق الصوتي."
   },
   ur: {
-    calculators: "کیلکولیٹرز", hajjUmrah: "حج و عمرہ", ramadan: "رمضان ٹولز", names: "اسلامی نام", finance: "اسلامی مالیات", food: "خوراک", more: "مزید", home: "صفحۂ اول", allTools: "تمام کیلکولیٹرز", footerNote: "روزمرہ سوالات کے لیے محتاط اندازے۔",
+    calculators: "کیلکولیٹرز", hajjUmrah: "حج و عمرہ", ramadan: "رمضان ٹولز", names: "اسلامی نام", finance: "اسلامی مالیات", food: "خوراک", more: "مزید", alQuran: "القرآن", toolsMenu: "ٹولز", donations: "عطیات", home: "صفحۂ اول", allTools: "تمام کیلکولیٹرز", footerNote: "روزمرہ سوالات کے لیے محتاط اندازے۔",
     breadcrumbCategory: "اسلامی کیلکولیٹرز", heroEyebrow: "برکہ ڈیلی / اسلامی کیلکولیٹرز اور ٹولز", heroTitle: "زکوٰۃ، عبادات اور مالیاتی زندگی کے لیے مستند اسلامی حسابات۔",
     heroDescription: "زکوٰۃ، سونا، چاندی، سرمایہ کاری، اوقاتِ نماز، قرآن پاک کی تکمیل اور خاندانی منصوبہ بندی کے لیے نجی و محفوظ کیلکولیٹرز۔ تمام معلومات آپ کے براؤزر میں رہتی ہیں۔",
     practicalTools: "۱۸ مخصوص کیلکولیٹرز", privateInputs: "۱۰۰٪ نجی و محفوظ براؤزر اسٹوریج", notRulings: "عملی اندازے، شرعی فتاویٰ نہیں", exploreEyebrow: "کیلکولیٹرز دیکھیں",

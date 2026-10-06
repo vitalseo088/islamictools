@@ -19,7 +19,9 @@ import {
   Sparkles,
   Check,
   X,
-  Globe
+  Globe,
+  Utensils,
+  Calendar
 } from "lucide-react";
 import Calculator from "./components/Calculator";
 import MuslimNamesHub from "./components/MuslimNamesHub";
@@ -162,6 +164,8 @@ export default function App() {
       if (slug && toolBySlug[slug]) {
         if (toolBySlug[slug].category === "Islamic Finance Tools") setActivePage("islamic-finance");
         else if (toolBySlug[slug].category === "Hajj & Umrah Tools") setActivePage("hajj-umrah");
+        else if (toolBySlug[slug].category === "Halal Food Tools") setActivePage("halal-food");
+        else if (toolBySlug[slug].category === "Islamic Planners & Trackers") setActivePage("planners");
         else if (toolBySlug[slug].category === "Ramadan Tools") setActivePage("ramadan");
         else if (toolBySlug[slug].category === "Muslim Names Tools") setActivePage("names");
         else setActivePage("calculators");
@@ -486,87 +490,7 @@ export default function App() {
               onClick={() => {
                 setSelectedCategory("all");
                 setSearchQuery("");
-                navigateTo(null, "calculators");
-              }}
-              className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 relative py-1 ${
-                activePage === "calculators"
-                  ? "text-[var(--primary)] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#AE2448]"
-                  : "text-[var(--ink)] hover:text-[var(--primary)]"
-              }`}
-            >
-              {t.calculators}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedCategory("all");
-                setSearchQuery("");
-                navigateTo(null, "islamic-finance");
-              }}
-              className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 relative py-1 ${
-                activePage === "islamic-finance"
-                  ? "text-[var(--primary)] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#AE2448]"
-                  : "text-[var(--ink)] hover:text-[var(--primary)]"
-              }`}
-            >
-              {t.finance}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedCategory("all");
-                setSearchQuery("");
-                navigateTo(null, "hajj-umrah");
-              }}
-              className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 relative py-1 ${
-                activePage === "hajj-umrah"
-                  ? "text-[var(--primary)] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#AE2448]"
-                  : "text-[var(--ink)] hover:text-[var(--primary)]"
-              }`}
-            >
-              {t.hajjUmrah}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedCategory("all");
-                setSearchQuery("");
-                navigateTo(null, "ramadan");
-              }}
-              className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 relative py-1 ${
-                activePage === "ramadan"
-                  ? "text-[var(--primary)] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#AE2448]"
-                  : "text-[var(--ink)] hover:text-[var(--primary)]"
-              }`}
-            >
-              {t.ramadan}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedCategory("all");
-                setSearchQuery("");
-                navigateTo(null, "halal-food");
-              }}
-              className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 relative py-1 ${
-                activePage === "halal-food"
-                  ? "text-[var(--primary)] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#AE2448]"
-                  : "text-[var(--ink)] hover:text-[var(--primary)]"
-              }`}
-            >
-              {t.food}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedCategory("all");
-                setSearchQuery("");
-                navigateTo(null, "planners");
+                navigateTo("quran-reading-goal", "planners");
               }}
               className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 relative py-1 ${
                 activePage === "planners"
@@ -574,10 +498,10 @@ export default function App() {
                   : "text-[var(--ink)] hover:text-[var(--primary)]"
               }`}
             >
-              {t.planners || "Planners"}
+              {t.alQuran}
             </button>
 
-            {/* More Dropdown */}
+            {/* Tools Dropdown (formerly More) */}
             <div className="relative" onMouseLeave={() => setIsMoreOpen(false)}>
               <button
                 type="button"
@@ -589,7 +513,7 @@ export default function App() {
                 aria-expanded={isMoreOpen}
                 aria-haspopup="true"
               >
-                <span>{t.more}</span>
+                <span>{t.toolsMenu}</span>
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${isMoreOpen ? "rotate-180" : ""}`} />
               </button>
 
@@ -741,15 +665,78 @@ export default function App() {
                     </div>
                   </button>
 
-                  <div className="my-1 border-t border-[#F2EAE0]" />
+                  {/* Halal Food Tools link */}
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                      setIsMoreOpen(false);
+                      setSearchQuery("");
+                      navigateTo(null, "halal-food");
+                    }}
+                    className="group w-full flex items-start gap-3 rounded-xl p-3 text-left transition-all duration-200 hover:bg-[#FFF6DE] cursor-pointer border-0 bg-transparent"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#AE2448] text-white shadow-xs group-hover:scale-105 transition-transform">
+                      <Utensils className="h-4 w-4" />
+                    </span>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-[var(--ink)] group-hover:text-[var(--primary)] transition-colors">
+                          {t.food}
+                        </span>
+                        <span className="rounded-full bg-[#AE2448]/15 px-2 py-0.5 text-[10px] font-bold text-[#AE2448]">
+                          12 {t.tools}
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-xs text-[var(--muted)] leading-relaxed m-0">
+                        {lang === "ar" ? "دليل الأرقام والمواد المضافة وفحص الجيلاتين" : lang === "ur" ? "E-نمبرز، جیلیٹن اور اجزاء کی تصدیق" : "E-numbers, gelatin, ingredients & scanners"}
+                      </p>
+                    </div>
+                  </button>
 
-                  <div className="px-3 py-2 text-xs text-[var(--muted)]/70 flex items-center justify-between">
-                    <span>{t.food}</span>
-                    <span className="text-[10px] uppercase font-bold tracking-wider">{lang === "ar" ? "قريباً" : lang === "ur" ? "جلد آرہا ہے" : "Coming later"}</span>
-                  </div>
+                  {/* Islamic Planners link */}
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                      setIsMoreOpen(false);
+                      setSearchQuery("");
+                      navigateTo(null, "planners");
+                    }}
+                    className="group w-full flex items-start gap-3 rounded-xl p-3 text-left transition-all duration-200 hover:bg-[#FFF6DE] cursor-pointer border-0 bg-transparent"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#AE2448] text-white shadow-xs group-hover:scale-105 transition-transform">
+                      <Calendar className="h-4 w-4" />
+                    </span>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-[var(--ink)] group-hover:text-[var(--primary)] transition-colors">
+                          {t.planners || "Planners"}
+                        </span>
+                        <span className="rounded-full bg-[#AE2448]/15 px-2 py-0.5 text-[10px] font-bold text-[#AE2448]">
+                          15 {t.tools}
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-xs text-[var(--muted)] leading-relaxed m-0">
+                        {lang === "ar" ? "مخططات القرآن والصلاة والتسبيح والعادات" : lang === "ur" ? "قرآن، نماز، تسبیح اور عادتوں کے ٹریکرز" : "Quran, prayer, Dhikr & habit trackers"}
+                      </p>
+                    </div>
+                  </button>
                 </div>
               )}
             </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedCategory("all");
+                setSearchQuery("");
+                navigateTo("ramadan-charity-calculator", "ramadan");
+              }}
+              className="text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 relative py-1 text-[var(--ink)] hover:text-[var(--primary)]"
+            >
+              {t.donations}
+            </button>
           </nav>
 
           {/* Custom Language Select Dropdown */}
@@ -759,23 +746,23 @@ export default function App() {
               id="language-switch"
               onClick={() => setIsLangOpen(!isLangOpen)}
               onMouseEnter={() => setIsLangOpen(true)}
-              className="flex items-center gap-1.5 rounded-xl border border-[#F2EAE0] bg-white px-3 py-1.5 text-xs font-bold text-[var(--ink)] shadow-2xs hover:border-[#AE2448] hover:bg-[#F2EAE0]/30 transition-all duration-200 cursor-pointer"
+              className="flex items-center gap-1.5 rounded-xl border border-[#E6D8BA] bg-[#FFF6DE] px-3.5 py-2 text-xs font-bold text-[var(--ink)] shadow-2xs hover:border-[#AE2448] hover:bg-[#FFEFC2] transition-all duration-200 cursor-pointer"
               aria-expanded={isLangOpen}
               aria-haspopup="true"
               aria-label="Choose language"
             >
               <Globe className="h-3.5 w-3.5 text-[#AE2448]" />
-              <span className="font-semibold">
+              <span className="font-bold text-[#6E1A37]">
                 {lang === "ar" ? "العربية" : lang === "ur" ? "اردو" : "English"}
               </span>
-              <ChevronDown className={`h-3 w-3 text-[var(--muted)] transition-transform duration-200 ${isLangOpen ? "rotate-180" : ""}`} />
+              <ChevronDown className={`h-3 w-3 text-[#6E1A37] transition-transform duration-200 ${isLangOpen ? "rotate-180" : ""}`} />
             </button>
 
             {isLangOpen && (
               <div
                 role="menu"
                 aria-orientation="vertical"
-                className="absolute right-0 top-full mt-2 w-44 rounded-2xl border border-[#F2EAE0] bg-white p-1.5 shadow-[0_16px_36px_rgba(110,26,55,0.09)] z-50 fade-up space-y-1"
+                className="absolute right-0 top-full mt-2 w-48 rounded-2xl border border-[#E6D8BA] bg-white p-2 shadow-[0_16px_36px_rgba(110,26,55,0.12)] z-50 fade-up space-y-1"
               >
                 {[
                   { code: "en", label: "English", native: "English" },
@@ -792,10 +779,10 @@ export default function App() {
                         setLang(item.code as Locale);
                         setIsLangOpen(false);
                       }}
-                      className={`w-full flex items-center justify-between rounded-xl px-3 py-2 text-xs font-bold transition-all duration-200 cursor-pointer border-0 ${
+                      className={`w-full flex items-center justify-between rounded-xl px-3.5 py-2 text-xs font-bold transition-all duration-200 cursor-pointer border-0 ${
                         isSelected
                           ? "bg-[#6E1A37] text-white shadow-xs"
-                          : "bg-transparent text-[var(--ink)] hover:bg-[#F2EAE0]/60 hover:text-[var(--primary)]"
+                          : "bg-transparent text-[var(--ink)] hover:bg-[#FFF6DE] hover:text-[var(--primary)]"
                       }`}
                     >
                       <span className="flex items-center gap-2">
@@ -816,7 +803,20 @@ export default function App() {
         </div>
 
         {/* Mobile secondary navigation */}
-        <nav aria-label="Mobile navigation" className="page-shell flex gap-5 overflow-x-auto pb-3 md:hidden">
+        <nav aria-label="Mobile navigation" className="page-shell flex gap-6 overflow-x-auto pb-3 md:hidden">
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedCategory("all");
+              setSearchQuery("");
+              navigateTo("quran-reading-goal", "planners");
+            }}
+            className={`whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 ${
+              activePage === "planners" ? "text-[var(--primary)] font-bold" : "text-[var(--ink)]"
+            }`}
+          >
+            {t.alQuran}
+          </button>
           <button
             type="button"
             onClick={() => {
@@ -824,70 +824,21 @@ export default function App() {
               setSearchQuery("");
               navigateTo(null, "calculators");
             }}
-            className={`whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 ${
-              activePage === "calculators" ? "text-[var(--primary)] font-bold" : "text-[var(--ink)]"
-            }`}
+            className="whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 text-[var(--ink)] hover:text-[var(--primary)]"
           >
-            {t.calculators}
+            {t.toolsMenu}
           </button>
           <button
             type="button"
             onClick={() => {
               setSelectedCategory("all");
               setSearchQuery("");
-              navigateTo(null, "islamic-finance");
+              navigateTo("ramadan-charity-calculator", "ramadan");
             }}
-            className={`whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 ${
-              activePage === "islamic-finance" ? "text-[var(--primary)] font-bold" : "text-[var(--ink)]"
-            }`}
+            className="whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 text-[var(--ink)] hover:text-[var(--primary)]"
           >
-            {t.finance}
+            {t.donations}
           </button>
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedCategory("all");
-              setSearchQuery("");
-              navigateTo(null, "hajj-umrah");
-            }}
-            className={`whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 ${
-              activePage === "hajj-umrah" ? "text-[var(--primary)] font-bold" : "text-[var(--ink)]"
-            }`}
-          >
-            {t.hajjUmrah}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedCategory("all");
-              setSearchQuery("");
-              navigateTo(null, "ramadan");
-            }}
-            className={`whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 ${
-              activePage === "ramadan" ? "text-[var(--primary)] font-bold" : "text-[var(--ink)]"
-            }`}
-          >
-            {t.ramadan}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedCategory("all");
-              setSearchQuery("");
-              navigateTo(null, "names");
-            }}
-            className={`whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 ${
-              activePage === "names" ? "text-[var(--primary)] font-bold" : "text-[var(--ink)]"
-            }`}
-          >
-            {t.names}
-          </button>
-          <span className="whitespace-nowrap text-sm text-[var(--muted)]/60" aria-disabled="true">
-            {t.food}
-          </span>
-          <span className="whitespace-nowrap text-sm text-[var(--muted)]/60" aria-disabled="true">
-            {t.more}
-          </span>
         </nav>
       </header>
 

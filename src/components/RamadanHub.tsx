@@ -26,10 +26,12 @@ import {
   Sunset,
   Award,
   Info,
-  Droplets
+  Droplets,
+  ArrowRight
 } from "lucide-react";
 import type { Tool } from "../data/tools";
 import type { Locale } from "../data/locales";
+import { fetchAlAdhanTimings, fetchGregorianToHijri } from "../utils/aladhan";
 
 interface RamadanHubProps {
   currentTool?: Tool | null;
@@ -196,18 +198,48 @@ const allRamadanToolsList = [
 export default function RamadanHub({ currentTool, onSelectTool, lang = "en" }: RamadanHubProps) {
   const t = rCopy[lang] || rCopy.en;
   const isRtl = lang === "ar" || lang === "ur";
-  const activeSlug = currentTool?.slug || "ramadan-countdown";
+  const activeSlug = currentTool?.slug || "";
 
   // Navigation tabs
   const [selectedToolSlug, setSelectedToolSlug] = useState<string>(activeSlug);
 
-  useEffect(() => {
-    if (currentTool?.slug) {
-      setSelectedToolSlug(currentTool.slug);
-    }
-  }, [currentTool]);
+  // AlAdhan API state for live prayer times and Hijri calendar
+  const [selectedCity, setSelectedCity] = useState("Mecca");
+  const [selectedCountry, setSelectedCountry] = useState("Saudi Arabia");
+  const [hijriDateDisplay, setHijriDateDisplay] = useState<string>("1447 AH / Ramadan");
+  const [apiLoading, setApiLoading] = useState(false);
 
-  // Copy feedback state
+  useEffect(() => {
+    let isMounted = true;
+    setApiLoading(true);
+    fetchAlAdhanTimings(selectedCity, selectedCountry).then((data) => {
+      if (data && isMounted) {
+        if (data.timings) {
+          if (data.timings.Fajr) setFajrTime(data.timings.Fajr.slice(0, 5));
+          if (data.timings.Maghrib) setMaghribTime(data.timings.Maghrib.slice(0, 5));
+          if (data.timings.Fajr) setSuhoorFajrInput(data.timings.Fajr.slice(0, 5));
+          if (data.timings.Maghrib) setIftarMaghribInput(data.timings.Maghrib.slice(0, 5));
+          if (data.timings.Fajr) setDurationFajr(data.timings.Fajr.slice(0, 5));
+          if (data.timings.Maghrib) setDurationMaghrib(data.timings.Maghrib.slice(0, 5));
+        }
+        if (data.date && data.date.hijri) {
+          const h = data.date.hijri;
+          setHijriDateDisplay(`${h.day} ${h.month.en} ${h.year} AH (${h.month.ar})`);
+        }
+      }
+      setApiLoading(false);
+    });
+    fetchGregorianToHijri().then((h) => {
+      if (h && isMounted) {
+        setHijriDateDisplay(`${h.day} ${h.month.en} ${h.year} AH (${h.month.ar})`);
+      }
+    });
+    return () => { isMounted = false; };
+  }, [selectedCity, selectedCountry]);
+
+  useEffect(() => {
+    setSelectedToolSlug(currentTool?.slug || "");
+  }, [currentTool]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -800,40 +832,123 @@ export default function RamadanHub({ currentTool, onSelectTool, lang = "en" }: R
           <Info className="h-4 w-4 text-[#AE2448] shrink-0 mt-0.5" />
           <p className="leading-normal">{t.privacyNotice}</p>
         </div>
+
+        {/* AlAdhan.com Live API City & Hijri Status Bar */}
+        <div className="mt-4 pt-4 border-t border-[#AE2448]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-[var(--ink)]">AlAdhan.com Live Hijri & Prayer API:</span>
+            <span className="rounded-full bg-[#FFF6DE] border border-[#E6D8BA] px-3 py-1 font-mono font-bold text-[#6E1A37]">
+              {hijriDateDisplay || "Loading Hijri Date..."} {apiLoading && " (Syncing...)"}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[var(--muted)] font-medium">City:</span>
+            <select
+              value={selectedCity}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSelectedCity(val);
+                if (val === "Mecca") setSelectedCountry("Saudi Arabia");
+                else if (val === "Cairo") setSelectedCountry("Egypt");
+                else if (val === "Dubai") setSelectedCountry("United Arab Emirates");
+                else if (val === "London") setSelectedCountry("United Kingdom");
+                else if (val === "New York") setSelectedCountry("United States");
+                else if (val === "Istanbul") setSelectedCountry("Turkey");
+                else if (val === "Jakarta") setSelectedCountry("Indonesia");
+                else if (val === "Kuala Lumpur") setSelectedCountry("Malaysia");
+              }}
+              className="rounded-xl border border-[#E6D8BA] bg-white px-3 py-1.5 font-bold text-[var(--ink)] outline-none cursor-pointer"
+            >
+              <option value="Mecca">Mecca (Makkah)</option>
+              <option value="Medina">Medina</option>
+              <option value="Riyadh">Riyadh</option>
+              <option value="Cairo">Cairo</option>
+              <option value="Dubai">Dubai</option>
+              <option value="London">London</option>
+              <option value="New York">New York</option>
+              <option value="Istanbul">Istanbul</option>
+              <option value="Jakarta">Jakarta</option>
+              <option value="Kuala Lumpur">Kuala Lumpur</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      {/* 17 Ramadan Tools Navigation Grid / Pills */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <span className="eyebrow">{t.toolsCount}</span>
-          <span className="text-xs text-[var(--muted)]">{t.viewAllTools}</span>
-        </div>
-
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
-          {allRamadanToolsList.map((tool) => {
-            const Icon = tool.icon;
-            const isSelected = selectedToolSlug === tool.slug;
-            return (
-              <button
-                key={tool.slug}
-                type="button"
-                onClick={() => {
-                  setSelectedToolSlug(tool.slug);
-                  onSelectTool(tool.slug);
-                }}
-                className={`flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold transition-all duration-200 cursor-pointer border ${
-                  isSelected
-                    ? "border-[#6E1A37] bg-[#6E1A37] !text-white shadow-sm scale-102"
-                    : "border-[#E6D8BA] bg-[#FFF6DE] text-[var(--ink)] hover:border-[#AE2448] hover:bg-[#FFEFC2]"
-                }`}
-              >
-                <Icon className={`h-4 w-4 ${isSelected ? "!text-white" : "text-[#6E1A37]"}`} />
-                <span>{tool.name}</span>
-              </button>
-            );
-          })}
+      {/* Section Sub-Header & Back Button */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E6D8BA] pb-4">
+        <div className="flex items-center gap-2">
+          {selectedToolSlug && (
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedToolSlug("");
+                onSelectTool("");
+              }}
+              className="rounded-xl border border-[#E6D8BA] bg-[#FFF6DE] px-3.5 py-1.5 text-xs font-bold text-[#6E1A37] hover:bg-[#FFEFC2] transition-colors cursor-pointer"
+            >
+              {lang === "ar" ? "← جميع أدوات رمضان" : lang === "ur" ? "← تمام رمضان ٹولز" : "← All Ramadan Tools"}
+            </button>
+          )}
+          <span className="text-xs font-bold text-[#6E1A37]">
+            {lang === "ar" ? "١٧ أداة ومخططاً لرمضان" : lang === "ur" ? "۱۷ انٹرایکٹو رمضان ٹولز" : "17 Dedicated Ramadan Tools & Planners"}
+          </span>
         </div>
       </div>
+
+      {/* VIEW 1: DIRECTORY GRID OF ALL 17 RAMADAN TOOLS (SIGNATURE CARDS) */}
+      {!selectedToolSlug && (
+        <div className="space-y-6">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {allRamadanToolsList.map((tool, idx) => {
+              const Icon = tool.icon;
+              return (
+                <button
+                  type="button"
+                  key={tool.slug}
+                  onClick={() => {
+                    setSelectedToolSlug(tool.slug);
+                    onSelectTool(tool.slug);
+                  }}
+                  className="group text-left relative flex min-h-[200px] flex-col justify-between rounded-2xl border border-[#E6D8BA] bg-[#FFF6DE] p-5 sm:p-6 no-underline interactive-card hover:border-[#AE2448] hover:bg-[#FFEFC2] cursor-pointer"
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-2.5">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#AE2448] text-white shadow-xs transition-transform duration-200 group-hover:scale-105">
+                          <Icon className="h-4 w-4" aria-hidden="true" />
+                        </span>
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#6E1A37]">
+                          {lang === "ar" ? "أداة رمضان" : "Ramadan Tool"}
+                        </span>
+                      </div>
+                      <span className="font-mono text-xs font-bold text-[#6E1A37]/60">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                    </div>
+
+                    <h4 className="mb-1.5 text-base sm:text-lg font-bold leading-snug tracking-[-.02em] text-[var(--ink)] group-hover:text-[var(--primary)] transition-colors">
+                      {tool.name}
+                    </h4>
+
+                    <p className="m-0 text-xs sm:text-sm leading-relaxed text-[#262626]">
+                      {tool.desc}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 pt-3.5 border-t border-[#E6D8BA] flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#6E1A37] group-hover:text-[var(--primary)] transition-colors">
+                      {lang === "ar" ? "افتح الأداة" : "Open Ramadan Tool"}
+                    </span>
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#AE2448] text-white group-hover:bg-[var(--primary)] group-hover:text-white transition-all duration-200 shadow-xs">
+                      <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180 transition-transform duration-200 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* ========================================================================= */}
       {/* DEDICATED TOOL VIEWS                                                     */}
