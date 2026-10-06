@@ -613,6 +613,46 @@ export const allThemes = [
 
 export const allLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
+export const englishLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+export const arabicLetters = [
+  "أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "هـ", "و", "ي"
+];
+export const urduLetters = [
+  "ا", "ب", "پ", "ت", "ٹ", "ث", "ج", "چ", "ح", "خ", "د", "ڈ", "ذ", "ر", "ڑ", "ز", "ژ", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ک", "گ", "ل", "م", "ن", "و", "ہ", "ی"
+];
+
+export function normalizeArabicLetter(ch: string): string {
+  if (!ch) return "";
+  return ch
+    .replace(/[\u064B-\u065F\u0670\u0651\u0652\u0640]/g, "") // remove harakat / tashkeel
+    .replace(/[إأآاٱء]/g, "ا") // normalize all alifs
+    .replace(/[كک]/g, "ك") // normalize kaf
+    .replace(/[ةهہهـ]/g, "ه") // normalize ha/ta-marbuta
+    .replace(/[ىيے]/g, "ي") // normalize ya
+    .trim();
+}
+
+export function getNameInitialArabic(arabicName: string): string {
+  const stripped = normalizeArabicLetter(arabicName);
+  return stripped.charAt(0) || "";
+}
+
+export function matchesNameLetter(name: MuslimName, selectedLetter: string, lang?: "en" | "ar" | "ur"): boolean {
+  if (!selectedLetter || selectedLetter === "all") return true;
+  
+  const isArabicChar = /[\u0600-\u06FF]/.test(selectedLetter);
+  if (isArabicChar || lang === "ar" || lang === "ur") {
+    const nameInitial = getNameInitialArabic(name.arabic);
+    const target = normalizeArabicLetter(selectedLetter);
+    if (nameInitial && target && nameInitial === target) return true;
+  }
+  
+  if (!isArabicChar) {
+    return name.name.toUpperCase().startsWith(selectedLetter.toUpperCase());
+  }
+  return false;
+}
+
 export const nameById = Object.fromEntries(muslimNames.map((n) => [n.id, n])) as Record<string, MuslimName>;
 
 export type NameTranslation = {

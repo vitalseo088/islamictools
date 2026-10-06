@@ -16,6 +16,10 @@ import {
   allOrigins,
   allThemes,
   allLetters,
+  englishLetters,
+  arabicLetters,
+  urduLetters,
+  matchesNameLetter,
   getLocalizedNameMeaning,
   getLocalizedQuranicRef,
   getLocalizedTheme,
@@ -330,6 +334,18 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
   });
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  // Active alphabet for current language
+  const activeAlphabet = useMemo(() => {
+    if (lang === "ar") return arabicLetters;
+    if (lang === "ur") return urduLetters;
+    return englishLetters;
+  }, [lang]);
+
+  // Reset letter filter when language changes
+  useEffect(() => {
+    setSelectedLetter("all");
+  }, [lang]);
+
   // Sync mode with active tool slug
   useEffect(() => {
     if (activeSlug === "muslim-boy-names") setSelectedGender("boy");
@@ -361,7 +377,10 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
   const handleCopy = (name: MuslimName) => {
     const meaningText = getLocalizedNameMeaning(name, lang);
     const originText = getLocalizedOrigin(name.origin, lang);
-    const text = `${name.name} (${name.arabic}) - ${meaningText}\n${t.pronunciation}: ${name.pronunciation} | ${t.allOrigins}: ${originText}`;
+    const text =
+      lang === "ar" || lang === "ur"
+        ? `${name.arabic} (${name.name}) - ${meaningText}\n${t.allOrigins}: ${originText}`
+        : `${name.name} (${name.arabic}) - ${meaningText}\n${t.pronunciation}: ${name.pronunciation} | ${t.allOrigins}: ${originText}`;
     navigator.clipboard.writeText(text);
     setCopiedId(name.id);
     setTimeout(() => setCopiedId(null), 2000);
@@ -373,7 +392,7 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
       if (selectedGender !== "all" && item.gender !== selectedGender && item.gender !== "unisex") {
         return false;
       }
-      if (selectedLetter !== "all" && !item.name.toUpperCase().startsWith(selectedLetter)) {
+      if (selectedLetter !== "all" && !matchesNameLetter(item, selectedLetter, lang)) {
         return false;
       }
       if (selectedOrigin !== "all" && item.origin !== selectedOrigin) {
@@ -598,12 +617,23 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
                       <span className="text-xs font-bold uppercase tracking-wider text-[#6E1A37]">
                         {pair.name1.gender === "boy" ? t.boys : pair.name1.gender === "girl" ? t.girls : t.allGenders}
                       </span>
-                      <span className="font-arabic text-xl font-bold text-[var(--primary)]">
-                        {pair.name1.arabic}
-                      </span>
+                      {lang === "en" && (
+                        <span className="font-arabic text-xl font-bold text-[var(--primary)]">
+                          {pair.name1.arabic}
+                        </span>
+                      )}
                     </div>
-                    <h3 className="text-xl font-extrabold text-[var(--ink)] m-0">{pair.name1.name}</h3>
-                    <p className="mt-1 text-xs text-[var(--muted)] font-mono">[{pair.name1.pronunciation}]</p>
+                    {lang === "ar" || lang === "ur" ? (
+                      <>
+                        <h3 className="text-2xl font-bold font-arabic text-[var(--ink)] m-0" dir="rtl">{pair.name1.arabic}</h3>
+                        <p className="mt-0.5 text-xs text-[#6E1A37] font-semibold">{pair.name1.name}</p>
+                      </>
+                    ) : (
+                      <>
+                        <h3 className="text-xl font-extrabold text-[var(--ink)] m-0">{pair.name1.name}</h3>
+                        <p className="mt-1 text-xs text-[var(--muted)] font-mono">[{pair.name1.pronunciation}]</p>
+                      </>
+                    )}
                     <div className="mt-3 pt-3 border-t border-[#F2EAE0]">
                       <p className="text-xs text-[var(--ink)] font-semibold leading-relaxed m-0">
                         <strong className="text-[#6E1A37]">{t.meaning}:</strong> {getLocalizedNameMeaning(pair.name1, lang)}
@@ -617,12 +647,23 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
                       <span className="text-xs font-bold uppercase tracking-wider text-[#6E1A37]">
                         {pair.name2.gender === "boy" ? t.boys : pair.name2.gender === "girl" ? t.girls : t.allGenders}
                       </span>
-                      <span className="font-arabic text-xl font-bold text-[var(--primary)]">
-                        {pair.name2.arabic}
-                      </span>
+                      {lang === "en" && (
+                        <span className="font-arabic text-xl font-bold text-[var(--primary)]">
+                          {pair.name2.arabic}
+                        </span>
+                      )}
                     </div>
-                    <h3 className="text-xl font-extrabold text-[var(--ink)] m-0">{pair.name2.name}</h3>
-                    <p className="mt-1 text-xs text-[var(--muted)] font-mono">[{pair.name2.pronunciation}]</p>
+                    {lang === "ar" || lang === "ur" ? (
+                      <>
+                        <h3 className="text-2xl font-bold font-arabic text-[var(--ink)] m-0" dir="rtl">{pair.name2.arabic}</h3>
+                        <p className="mt-0.5 text-xs text-[#6E1A37] font-semibold">{pair.name2.name}</p>
+                      </>
+                    ) : (
+                      <>
+                        <h3 className="text-xl font-extrabold text-[var(--ink)] m-0">{pair.name2.name}</h3>
+                        <p className="mt-1 text-xs text-[var(--muted)] font-mono">[{pair.name2.pronunciation}]</p>
+                      </>
+                    )}
                     <div className="mt-3 pt-3 border-t border-[#F2EAE0]">
                       <p className="text-xs text-[var(--ink)] font-semibold leading-relaxed m-0">
                         <strong className="text-[#6E1A37]">{t.meaning}:</strong> {getLocalizedNameMeaning(pair.name2, lang)}
@@ -822,7 +863,7 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
           </select>
         </div>
 
-        {/* Alphabet Bar A-Z */}
+        {/* Alphabet Bar with localized letters */}
         <div className="pt-2 border-t border-[#F2EAE0] flex items-center gap-1 overflow-x-auto pb-1 scrollbar-thin">
           <button
             type="button"
@@ -835,14 +876,14 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
           >
             {t.all}
           </button>
-          {allLetters.map((letter) => {
+          {activeAlphabet.map((letter) => {
             const isSelected = selectedLetter === letter;
             return (
               <button
                 key={letter}
                 type="button"
                 onClick={() => setSelectedLetter(isSelected ? "all" : letter)}
-                className={`h-7 w-7 rounded-md text-xs font-bold shrink-0 flex items-center justify-center transition-colors cursor-pointer border ${
+                className={`h-7 min-w-7 px-1.5 rounded-md text-xs font-bold shrink-0 flex items-center justify-center transition-colors cursor-pointer border ${
                   isSelected
                     ? "bg-[var(--primary)] text-white border-[var(--primary)]"
                     : "bg-white text-[var(--ink)] border-[#F2EAE0] hover:border-[#AE2448]"
@@ -882,7 +923,7 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
               className="interactive-card relative flex flex-col justify-between rounded-2xl border border-[#F2EAE0] bg-white p-5 sm:p-6 hover:border-[#AE2448]"
             >
               <div>
-                {/* Header: Badges & Arabic Calligraphy */}
+                {/* Header: Badges */}
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="flex flex-wrap items-center gap-1.5">
                     <span
@@ -906,18 +947,34 @@ export default function MuslimNamesHub({ currentTool, onSelectTool, lang = "en" 
                       </span>
                     )}
                   </div>
-                  <span className="font-arabic text-2xl font-bold text-[var(--primary)] leading-none" dir="rtl">
-                    {item.arabic}
-                  </span>
+                  {lang === "en" && (
+                    <span className="font-arabic text-2xl font-bold text-[var(--primary)] leading-none" dir="rtl">
+                      {item.arabic}
+                    </span>
+                  )}
                 </div>
 
-                {/* Primary English/Latin Name */}
-                <h4 className="text-xl font-extrabold text-[var(--ink)] tracking-tight mb-1">
-                  {item.name}
-                </h4>
-                <p className="m-0 text-xs font-mono text-[var(--muted)] mb-3">
-                  {t.pronunciation}: <span className="font-semibold text-[var(--ink)]">{item.pronunciation}</span>
-                </p>
+                {/* Name Heading & Sub-transliteration */}
+                {lang === "ar" || lang === "ur" ? (
+                  <div className="mb-3">
+                    <h4 className="text-2xl font-bold font-arabic text-[var(--ink)] tracking-tight mb-0.5" dir="rtl">
+                      {item.arabic}
+                    </h4>
+                    <p className="m-0 text-xs font-semibold text-[#6E1A37] flex items-center gap-2">
+                      <span>{item.name}</span>
+                      <span className="text-[var(--muted)] font-mono text-[11px]">[{item.pronunciation}]</span>
+                    </p>
+                  </div>
+                ) : (
+                  <div className="mb-3">
+                    <h4 className="text-xl font-extrabold text-[var(--ink)] tracking-tight mb-1">
+                      {item.name}
+                    </h4>
+                    <p className="m-0 text-xs font-mono text-[var(--muted)]">
+                      {t.pronunciation}: <span className="font-semibold text-[var(--ink)]">{item.pronunciation}</span>
+                    </p>
+                  </div>
+                )}
 
                 {/* PROMINENT MEANING DISPLAY */}
                 <div className="rounded-xl border border-[#F2EAE0] bg-[#F2EAE0]/60 p-3.5 shadow-2xs mb-4">

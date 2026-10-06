@@ -18,7 +18,8 @@ import {
   ChevronDown,
   Sparkles,
   Check,
-  X
+  X,
+  Globe
 } from "lucide-react";
 import Calculator from "./components/Calculator";
 import MuslimNamesHub from "./components/MuslimNamesHub";
@@ -126,6 +127,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [copiedLink, setCopiedLink] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
 
   // Sync language with document attributes & event dispatch
   useEffect(() => {
@@ -410,17 +412,17 @@ export default function App() {
               navigateTo(null, "calculators");
             }}
             className="group flex items-center gap-3 no-underline cursor-pointer border-0 bg-transparent text-left p-0"
-            aria-label="Amanah Calculators"
+            aria-label="BarakahDaily"
           >
             <span className="brand-seal" aria-hidden="true">
-              أ
+              ب
             </span>
             <span className="leading-tight">
-              <span className="block text-[15px] font-bold tracking-[-.03em] text-[var(--ink)]">
-                Amanah
+              <span className="block text-[17px] font-extrabold tracking-[-.02em] text-[var(--ink)]">
+                Barakah<span className="text-[#AE2448]">Daily</span>
               </span>
-              <span className="mt-1 block text-[10px] tracking-[.13em] text-[var(--muted)]">
-                CALCULATORS
+              <span className="mt-0.5 block text-[9px] font-bold tracking-[.14em] text-[var(--muted)]/80 uppercase">
+                {lang === "ar" ? "أدوات وحاسبات إسلامية" : lang === "ur" ? "روزمرہ اسلامی ٹولز" : "Islamic Tools & Guidance"}
               </span>
             </span>
           </button>
@@ -594,21 +596,66 @@ export default function App() {
             </div>
           </nav>
 
-          <div className="flex items-center gap-2">
-            <label htmlFor="language-switch" className="sr-only">
-              Choose language
-            </label>
-            <select
+          {/* Custom Language Select Dropdown */}
+          <div className="relative" onMouseLeave={() => setIsLangOpen(false)}>
+            <button
+              type="button"
               id="language-switch"
-              value={lang}
-              onChange={(e) => setLang(e.target.value as Locale)}
-              className="rounded-md border border-[var(--line)] bg-white px-2.5 py-2 text-xs font-semibold text-[var(--primary)] focus-visible:outline cursor-pointer"
+              onClick={() => setIsLangOpen(!isLangOpen)}
+              onMouseEnter={() => setIsLangOpen(true)}
+              className="flex items-center gap-1.5 rounded-xl border border-[#F2EAE0] bg-white px-3 py-1.5 text-xs font-bold text-[var(--ink)] shadow-2xs hover:border-[#AE2448] hover:bg-[#F2EAE0]/30 transition-all duration-200 cursor-pointer"
+              aria-expanded={isLangOpen}
+              aria-haspopup="true"
               aria-label="Choose language"
             >
-              <option value="en">EN</option>
-              <option value="ar">عربي</option>
-              <option value="ur">اردو</option>
-            </select>
+              <Globe className="h-3.5 w-3.5 text-[#AE2448]" />
+              <span className="font-semibold">
+                {lang === "ar" ? "العربية" : lang === "ur" ? "اردو" : "English"}
+              </span>
+              <ChevronDown className={`h-3 w-3 text-[var(--muted)] transition-transform duration-200 ${isLangOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            {isLangOpen && (
+              <div
+                role="menu"
+                aria-orientation="vertical"
+                className="absolute right-0 top-full mt-2 w-44 rounded-2xl border border-[#F2EAE0] bg-white p-1.5 shadow-[0_16px_36px_rgba(110,26,55,0.09)] z-50 fade-up space-y-1"
+              >
+                {[
+                  { code: "en", label: "English", native: "English" },
+                  { code: "ar", label: "Arabic", native: "العربية" },
+                  { code: "ur", label: "Urdu", native: "اردو" }
+                ].map((item) => {
+                  const isSelected = lang === item.code;
+                  return (
+                    <button
+                      key={item.code}
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setLang(item.code as Locale);
+                        setIsLangOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between rounded-xl px-3 py-2 text-xs font-bold transition-all duration-200 cursor-pointer border-0 ${
+                        isSelected
+                          ? "bg-[#6E1A37] text-white shadow-xs"
+                          : "bg-transparent text-[var(--ink)] hover:bg-[#F2EAE0]/60 hover:text-[var(--primary)]"
+                      }`}
+                    >
+                      <span className="flex items-center gap-2">
+                        <span>{item.native}</span>
+                        {item.code !== "en" && (
+                          <span className={`text-[10px] font-normal ${isSelected ? "text-white/80" : "text-[var(--muted)]"}`}>
+                            ({item.label})
+                          </span>
+                        )}
+                      </span>
+                      {isSelected && <Check className="h-3.5 w-3.5 text-white" />}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 
@@ -1269,10 +1316,12 @@ export default function App() {
       <footer className="mt-20 border-t border-[#8C2448] bg-[#AE2448] text-white">
         <div className="page-shell flex flex-col justify-between gap-4 py-8 sm:flex-row sm:items-center">
           <div className="flex items-center gap-3">
-            <span className="brand-seal !h-8 !w-8 text-base !border-white !text-white" aria-hidden="true">
-              أ
+            <span className="brand-seal !h-8 !w-8 !text-sm !bg-white !text-[#6E1A37] shadow-sm" aria-hidden="true">
+              ب
             </span>
-            <span className="text-sm font-bold text-white">Amanah Calculators</span>
+            <span className="text-base font-extrabold text-white tracking-tight">
+              Barakah<span className="text-[#F2EAE0]">Daily</span>
+            </span>
           </div>
           <p className="m-0 text-sm font-medium text-white/90">{t.footerNote}</p>
           <button
