@@ -1015,6 +1015,7 @@ export default function Calculator({ tool }: { tool: Tool }) {
   });
   const [currency, setCurrency] = useState("USD");
   const [errors, setErrors] = useState<string[]>([]);
+  const [copiedResult, setCopiedResult] = useState(false);
 
   useEffect(() => {
     const listener = (event: Event) => setLang((event as CustomEvent<Lang>).detail);
@@ -1033,6 +1034,21 @@ export default function Calculator({ tool }: { tool: Tool }) {
       [field.name]: field.type === "select" || field.type === "time" || field.type === "date" ? value : value
     }));
     setErrors([]);
+  };
+
+  const resetDefaults = () => {
+    setValues(initialValues(tool));
+    setErrors([]);
+  };
+
+  const handleCopyResult = () => {
+    if (typeof window !== "undefined") {
+      const detailsText = result.details.map((d) => `${d.label}: ${d.value}`).join("\n");
+      const textToCopy = `${result.headline}: ${result.value} ${result.unit ?? ""}\n${detailsText}`;
+      navigator.clipboard.writeText(textToCopy);
+      setCopiedResult(true);
+      setTimeout(() => setCopiedResult(false), 2000);
+    }
   };
 
   const validate = (event: FormEvent<HTMLFormElement>) => {
@@ -1067,38 +1083,51 @@ export default function Calculator({ tool }: { tool: Tool }) {
   return (
     <section
       dir={dir}
-      className="fade-up grid items-start gap-5 lg:grid-cols-[minmax(0,1.13fr)_minmax(330px,.87fr)]"
+      className="fade-up grid items-start gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(340px,.85fr)]"
       aria-label={displayTitle}
     >
       <form
         onSubmit={validate}
         noValidate
-        className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-[0_5px_22px_rgba(35,42,62,.055)] sm:p-7"
+        className="relative overflow-hidden rounded-3xl border-2 border-[#31AAA9]/30 bg-white p-6 sm:p-8 shadow-[0_16px_36px_rgba(49,170,169,0.09),0_2px_8px_rgba(0,0,0,0.03)]"
       >
-        <div className="mb-6 flex items-start justify-between gap-4 border-b border-[var(--line)] pb-5">
+        {/* Top Accent Strip */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#31AAA9] via-[#6C1A1A] to-[#31AAA9]" />
+
+        {/* Header with Secondary Color Pill & Seal */}
+        <div className="mb-6 flex items-start justify-between gap-4 border-b border-[#31AAA9]/20 pb-5">
           <div>
-            <p className="eyebrow mb-1">{displayCategory}</p>
-            <h2 className="m-0 text-lg font-semibold tracking-[-.025em]">{displayTitle}</h2>
-            <p className="mb-0 mt-1 text-xs leading-5 text-[var(--muted)]">{t.calcNote}</p>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#31AAA9]/15 text-[#145352] text-xs font-bold mb-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#31AAA9]" />
+              {displayCategory}
+            </span>
+            <h2 className="m-0 text-xl sm:text-2xl font-bold tracking-tight text-[var(--ink)]">{displayTitle}</h2>
+            <p className="mb-0 mt-1.5 text-xs sm:text-sm leading-relaxed text-[var(--muted)]">{t.calcNote}</p>
           </div>
           <span
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#d2d6df] bg-[var(--canvas)] font-arabic text-base text-[var(--primary)]"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#31AAA9] font-arabic text-xl font-bold text-white shadow-xs"
             aria-hidden="true"
           >
             أ
           </span>
         </div>
 
+        {/* Currency Selector Bar with Secondary Blue Styling */}
         {currencyFields && (
-          <div className="mb-5 max-w-[240px]">
-            <label htmlFor="currency" className="mb-1.5 block text-xs font-semibold text-[#3b3f49]">
-              {t.currency}
-            </label>
+          <div className="mb-6 rounded-2xl border border-[#31AAA9]/30 bg-[#31AAA9]/5 p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#31AAA9] text-white text-xs font-bold shadow-2xs">
+                $
+              </span>
+              <label htmlFor="currency" className="text-xs sm:text-sm font-bold text-[var(--ink)]">
+                {t.currency}
+              </label>
+            </div>
             <select
               id="currency"
               value={currency}
               onChange={(e) => setCurrency(e.target.value)}
-              className="w-full rounded-lg border border-[#d7dbe2] bg-white px-3 py-2.5 text-sm text-[var(--ink)] cursor-pointer"
+              className="rounded-xl border border-[#31AAA9]/40 bg-white px-3.5 py-2 text-xs sm:text-sm font-bold text-[var(--ink)] cursor-pointer focus:border-[#31AAA9] focus:ring-2 focus:ring-[#31AAA9]/25 outline-none shadow-2xs"
             >
               <option value="USD">USD — US Dollar</option>
               <option value="GBP">GBP — Pound Sterling</option>
@@ -1113,7 +1142,8 @@ export default function Calculator({ tool }: { tool: Tool }) {
           </div>
         )}
 
-        <div className="grid gap-x-4 gap-y-4 sm:grid-cols-2">
+        {/* Fields Grid */}
+        <div className="grid gap-x-5 gap-y-5 sm:grid-cols-2">
           {tool.fields.map((field) => {
             if (field.name === "property" && values.purpose !== "resale") return null;
             const id = `${tool.slug}-${field.name}`;
@@ -1122,11 +1152,13 @@ export default function Calculator({ tool }: { tool: Tool }) {
               <div className={field.type === "range" ? "sm:col-span-2" : ""} key={field.name}>
                 <label
                   htmlFor={id}
-                  className="mb-1.5 flex items-baseline justify-between gap-2 text-xs font-semibold text-[#3b3f49]"
+                  className="mb-1.5 flex items-baseline justify-between gap-2 text-xs font-bold text-[var(--ink)]"
                 >
                   <span>{fieldLabel(field, lang, tool.slug)}</span>
                   {unitLabel && (
-                    <span className="text-[10px] font-medium text-[#6b7180]">{unitLabel}</span>
+                    <span className="rounded-md bg-[#31AAA9]/10 px-2 py-0.5 text-[11px] font-bold text-[#145352]">
+                      {unitLabel}
+                    </span>
                   )}
                 </label>
                 {field.type === "select" ? (
@@ -1134,7 +1166,7 @@ export default function Calculator({ tool }: { tool: Tool }) {
                     id={id}
                     value={String(values[field.name])}
                     onChange={(e) => setField(field, e.target.value)}
-                    className="w-full rounded-lg border border-[#d7dbe2] bg-white px-3 py-3 text-sm text-[var(--ink)] transition focus:border-[var(--secondary-ink)] cursor-pointer"
+                    className="w-full rounded-xl border border-[#D1D5DB] bg-white px-3.5 py-3 text-sm sm:text-base font-semibold text-[var(--ink)] transition hover:border-[#31AAA9]/60 focus:border-[#31AAA9] focus:ring-2 focus:ring-[#31AAA9]/20 cursor-pointer outline-none shadow-2xs"
                   >
                     {field.options?.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -1152,11 +1184,11 @@ export default function Calculator({ tool }: { tool: Tool }) {
                       step={field.step}
                       value={Number(values[field.name])}
                       onChange={(e) => setField(field, e.target.value)}
-                      className="h-2 w-full cursor-pointer accent-[var(--primary)]"
+                      className="h-2 w-full cursor-pointer accent-[#31AAA9]"
                     />
                     <output
                       htmlFor={id}
-                      className="min-w-16 rounded-md bg-[var(--highlight)] px-2 py-1 text-center text-sm font-semibold text-[var(--primary)]"
+                      className="min-w-16 rounded-xl bg-[#31AAA9] text-white px-3 py-1.5 text-center text-xs sm:text-sm font-bold shadow-xs"
                     >
                       {values[field.name]}
                       {unitLabel}
@@ -1171,7 +1203,7 @@ export default function Calculator({ tool }: { tool: Tool }) {
                     step={field.step}
                     value={String(values[field.name] ?? "")}
                     onChange={(e) => setField(field, e.target.value)}
-                    className="w-full rounded-lg border border-[#d7dbe2] bg-white px-3 py-3 text-sm text-[var(--ink)] transition placeholder:text-[#858b97] focus:border-[var(--secondary-ink)]"
+                    className="w-full rounded-xl border border-[#D1D5DB] bg-white px-3.5 py-3 text-sm sm:text-base font-semibold text-[var(--ink)] transition placeholder:text-[var(--muted)]/40 hover:border-[#31AAA9]/60 focus:border-[#31AAA9] focus:ring-2 focus:ring-[#31AAA9]/20 outline-none shadow-2xs"
                     inputMode={field.type === "time" || field.type === "date" ? undefined : "decimal"}
                     aria-describedby={`${id}-unit`}
                   />
@@ -1181,12 +1213,22 @@ export default function Calculator({ tool }: { tool: Tool }) {
           })}
         </div>
 
-        <button
-          type="submit"
-          className="mt-6 min-h-11 w-full rounded-lg bg-[var(--primary)] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#23283B] active:translate-y-px sm:w-auto cursor-pointer"
-        >
-          {lang === "ar" ? "تحديث التقدير" : lang === "ur" ? "اندازہ تازہ کریں" : "Update estimate"}
-        </button>
+        {/* Action Buttons Toolbar */}
+        <div className="mt-8 pt-5 border-t border-[#31AAA9]/20 flex flex-wrap items-center gap-3">
+          <button
+            type="submit"
+            className="min-h-12 flex-1 sm:flex-none rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold !text-white transition hover:bg-[var(--primary-hover)] active:scale-[0.99] cursor-pointer shadow-md flex items-center justify-center gap-2 border-0"
+          >
+            <span>{lang === "ar" ? "تحديث التقدير" : lang === "ur" ? "اندازہ تازہ کریں" : "Update estimate"}</span>
+          </button>
+          <button
+            type="button"
+            onClick={resetDefaults}
+            className="min-h-12 rounded-xl border border-[#31AAA9] bg-white px-4 py-3 text-sm font-bold text-[#145352] hover:bg-[#31AAA9] hover:!text-white transition active:scale-[0.99] cursor-pointer flex items-center justify-center gap-2"
+          >
+            <span>{lang === "ar" ? "إعادة الضبط" : lang === "ur" ? "دوبارہ ترتیب دیں" : "Reset inputs"}</span>
+          </button>
+        </div>
         <p className="mb-0 mt-3 text-[11px] leading-5 text-[var(--muted)]">
           {lang === "ar"
             ? "تبقى مدخلاتك في هذا المتصفح."
@@ -1201,48 +1243,51 @@ export default function Calculator({ tool }: { tool: Tool }) {
         aria-live="polite"
         aria-atomic="true"
         dir={dir}
-        className="rounded-2xl border border-[#d1d0b8] bg-[var(--result)] p-5 sm:p-7 lg:sticky lg:top-5"
+        className="relative overflow-hidden rounded-3xl border-2 border-[#31AAA9]/40 bg-[var(--result)] p-6 sm:p-7 lg:sticky lg:top-24 shadow-[0_16px_36px_rgba(49,170,169,0.14)]"
       >
-        <div className="mb-5 flex items-center justify-between gap-4">
+        {/* Top Accent Strip */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#31AAA9]" />
+
+        {/* Live Estimate Header */}
+        <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#E8D090] pb-4">
           <div>
-            <p className="eyebrow mb-1">{t.estimate}</p>
-            <p className="m-0 text-xs text-[var(--muted)]">{t.readResult}</p>
+            <p className="eyebrow mb-1 text-[var(--primary)]">{t.estimate}</p>
+            <p className="m-0 text-xs font-semibold text-[#145352]">{t.readResult}</p>
           </div>
-          <span
-            className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${
-              result.tone === "caution"
-                ? "bg-[var(--highlight)] text-[#554f3d]"
-                : "bg-[#dbe1e7] text-[var(--primary)]"
-            }`}
-          >
+          <span className="rounded-full bg-[#31AAA9] text-white px-3.5 py-1 text-xs font-bold shadow-xs flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
             {displayCategory}
           </span>
         </div>
 
-        <p className="mb-2 text-sm font-semibold text-[var(--ink)]">{result.headline}</p>
-
-        {/* Primary Result Value with Unit */}
-        <div className="m-0 flex flex-wrap items-baseline gap-2 leading-tight tracking-[-.045em] text-[var(--primary)]" dir={dir}>
-          <span className="text-3xl sm:text-4xl font-semibold break-words tabular-nums">
-            <bdi>{result.value}</bdi>
-          </span>
-          {result.unit && (
-            <span className="text-xl sm:text-2xl font-medium text-[var(--secondary-ink)]">
-              <bdi>{result.unit}</bdi>
+        {/* Standout Result Hero Card */}
+        <div className="rounded-2xl border border-[#DEC074] bg-white/70 p-5 shadow-2xs mb-5">
+          <p className="m-0 mb-1.5 text-xs font-bold uppercase tracking-wider text-[#145352]">{result.headline}</p>
+          <div className="flex flex-wrap items-baseline gap-2 leading-tight tracking-tight text-[var(--primary)]" dir={dir}>
+            <span className="text-3xl sm:text-4xl font-extrabold tabular-nums break-words">
+              <bdi>{result.value}</bdi>
             </span>
-          )}
+            {result.unit && (
+              <span className="text-xl sm:text-2xl font-bold text-[#195857]">
+                <bdi>{result.unit}</bdi>
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Detailed Breakdown List */}
         {result.details.length > 0 && (
-          <dl className="mb-0 mt-6 divide-y divide-[#cbc9b2] border-y border-[#cbc9b2]">
+          <dl className="mb-0 divide-y divide-[#EAD498] border-y border-[#EAD498]">
             {result.details.map((detail, index) => (
               <div
                 key={`${detail.label}-${index}`}
-                className="flex items-start justify-between gap-5 py-3 text-sm"
+                className="flex items-start justify-between gap-4 py-3 text-xs sm:text-sm"
               >
-                <dt className="text-[var(--muted)]">{detail.label}</dt>
-                <dd className="m-0 text-end font-semibold text-[var(--ink)] tabular-nums" dir={dir}>
+                <dt className="text-[var(--ink)] font-semibold flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#31AAA9] shrink-0" />
+                  <span>{detail.label}</span>
+                </dt>
+                <dd className="m-0 text-end font-bold text-[var(--ink)] tabular-nums" dir={dir}>
                   <bdi>{detail.value}</bdi>
                 </dd>
               </div>
@@ -1250,16 +1295,18 @@ export default function Calculator({ tool }: { tool: Tool }) {
           </dl>
         )}
 
+        {/* Result Note (Notice with highlights background & secondary blue left border) */}
         {result.note && (
-          <p className="mb-0 mt-5 border-s-2 border-[var(--secondary-ink)] ps-3 text-xs leading-5 text-[#454a55]">
+          <div className="mt-5 rounded-xl border border-[#DFBE6E] border-s-4 border-s-[#31AAA9] bg-[var(--highlight)] p-3.5 text-xs font-medium leading-5 text-[var(--ink)]">
             {result.note}
-          </p>
+          </div>
         )}
 
+        {/* Error Callout */}
         {errors.length > 0 && (
           <div
             role="alert"
-            className="mt-5 rounded-lg border border-[#b76550] bg-[#fff3ed] p-3 text-xs leading-5 text-[#713b2c]"
+            className="mt-5 rounded-xl border border-[var(--primary)] bg-[var(--highlight)] p-4 text-xs leading-5 text-[var(--primary)] font-medium"
           >
             <p className="mb-1 font-bold">{t.reviewInputs}</p>
             <ul className="m-0 list-disc ps-4">
@@ -1270,14 +1317,24 @@ export default function Calculator({ tool }: { tool: Tool }) {
           </div>
         )}
 
-        <div className="mt-6 flex items-start gap-2 border-t border-[#cbc9b2] pt-4 text-[10px] leading-4 text-[#505460]">
+        {/* Copy Estimate Button */}
+        <button
+          type="button"
+          onClick={handleCopyResult}
+          className="mt-5 w-full rounded-xl bg-[#31AAA9] hover:bg-[#258D8C] text-white py-2.5 px-4 text-xs font-bold transition shadow-xs cursor-pointer border-0 flex items-center justify-center gap-2"
+        >
+          <span>{copiedResult ? (lang === "ar" ? "✓ تم نسخ التقدير!" : lang === "ur" ? "✓ اندازہ کاپی ہوگیا!" : "✓ Estimate copied!") : (lang === "ar" ? "نسخ تفاصيل التقدير" : lang === "ur" ? "تفصیلات کاپی کریں" : "Copy estimate details")}</span>
+        </button>
+
+        {/* Disclaimer / Caveat */}
+        <div className="mt-5 flex items-start gap-2 border-t border-[#EAD498] pt-4 text-[10px] leading-4 text-[var(--ink)]">
           <span
-            className="mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-[#858b98] font-serif text-[9px]"
+            className="mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#31AAA9] font-serif text-[9px] text-white font-bold"
             aria-hidden="true"
           >
             i
           </span>
-          <p className="m-0">{caveatText(tool, lang)}</p>
+          <p className="m-0 font-medium">{caveatText(tool, lang)}</p>
         </div>
       </aside>
     </section>

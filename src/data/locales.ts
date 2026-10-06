@@ -43,7 +43,7 @@ export const categoryCopy: Record<string, Record<Exclude<Locale, "en">, string>>
 export const siteCopy: Record<Locale, Record<string, string>> = {
   en: {
     calculators: "Calculators", ramadan: "Ramadan", finance: "Finance", food: "Food", more: "More", home: "Home", allTools: "All calculators", footerNote: "Thoughtful estimates for everyday questions.",
-    breadcrumbCategory: "Islamic Calculators", heroEyebrow: "AMANAH / A CONSIDERED STARTING POINT", heroTitle: "Islamic calculators, with room for nuance.",
+    breadcrumbCategory: "Islamic Calculators", heroEyebrow: "AMANAH / A CONSIDERED STARTING POINT", heroTitle: "Faithful Calculations for Worship, Giving & Daily Life",
     heroDescription: "Practical estimates for worship, giving and everyday planning. Clear assumptions up front, and thoughtful reminders where local guidance may differ.",
     practicalTools: "25 practical tools", privateInputs: "Your inputs stay in your browser", notRulings: "Estimates, not rulings", exploreEyebrow: "EXPLORE THE COLLECTION",
     findTool: "Find a calculator", findDescription: "Choose a tool to start. Each estimate explains its inputs and makes its assumptions visible.",
@@ -55,7 +55,7 @@ export const siteCopy: Record<Locale, Record<string, string>> = {
   },
   ar: {
     calculators: "الحاسبات", ramadan: "رمضان", finance: "المالية", food: "الطعام", more: "المزيد", home: "الرئيسية", allTools: "كل الحاسبات", footerNote: "تقديرات متأنية لأسئلة الحياة اليومية.",
-    breadcrumbCategory: "الحاسبات الإسلامية", heroEyebrow: "أمانة / بداية مدروسة", heroTitle: "حاسبات إسلامية تراعي اختلاف الآراء.",
+    breadcrumbCategory: "الحاسبات الإسلامية", heroEyebrow: "أمانة / بداية مدروسة", heroTitle: "حسابات إسلامية موثوقة للعبادة والعطاء والحياة.",
     heroDescription: "تقديرات عملية للعبادة والعطاء والتخطيط اليومي، مع توضيح الافتراضات والتنبيه إلى اختلاف الإرشادات المحلية.",
     practicalTools: "٢٥ أداة عملية", privateInputs: "تبقى مدخلاتك في متصفحك", notRulings: "تقديرات وليست فتاوى", exploreEyebrow: "استكشف المجموعة",
     findTool: "اختر حاسبة", findDescription: "ابدأ باختيار أداة. توضح كل نتيجة مدخلاتها والافتراضات المستخدمة.",
@@ -67,7 +67,7 @@ export const siteCopy: Record<Locale, Record<string, string>> = {
   },
   ur: {
     calculators: "کیلکولیٹرز", ramadan: "رمضان", finance: "مالیات", food: "خوراک", more: "مزید", home: "صفحۂ اول", allTools: "تمام کیلکولیٹرز", footerNote: "روزمرہ سوالات کے لیے محتاط اندازے۔",
-    breadcrumbCategory: "اسلامی کیلکولیٹرز", heroEyebrow: "امانت / ایک سوچا سمجھا آغاز", heroTitle: "اسلامی کیلکولیٹرز، اختلاف کی گنجائش کے ساتھ۔",
+    breadcrumbCategory: "اسلامی کیلکولیٹرز", heroEyebrow: "امانت / ایک سوچا سمجھا آغاز", heroTitle: "عبادت، خیرات اور روزمرہ زندگی کے لیے قابلِ اعتماد اسلامی حسابات۔",
     heroDescription: "عبادت، خیرات اور روزمرہ منصوبہ بندی کے عملی اندازے۔ مفروضے واضح ہیں اور مقامی رہنمائی کے اختلاف کی یاد دہانی بھی۔",
     practicalTools: "۲۵ عملی ٹولز", privateInputs: "آپ کی معلومات اسی براؤزر میں رہتی ہیں", notRulings: "اندازے، شرعی احکام نہیں", exploreEyebrow: "مجموعہ دیکھیں",
     findTool: "کیلکولیٹر منتخب کریں", findDescription: "شروع کرنے کے لیے ایک ٹول منتخب کریں۔ ہر اندازے میں اس کے اِن پٹس اور مفروضے واضح ہیں۔",

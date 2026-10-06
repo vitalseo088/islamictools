@@ -4,9 +4,38 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
+import {
+  Calculator as CalcIcon,
+  Moon,
+  Coins,
+  BookOpen,
+  Clock,
+  Compass,
+  Users,
+  HeartHandshake,
+  Scale,
+  ArrowRight
+} from "lucide-react";
 import Calculator from "./components/Calculator";
 import { tools, toolBySlug, type Tool } from "./data/tools";
 import { categoryCopy, siteCopy, toolCopy, type Locale } from "./data/locales";
+
+const getToolIcon = (tool: Tool) => {
+  const cat = tool.category;
+  const slug = tool.slug;
+  if (cat === "Zakat") {
+    if (slug.includes("business") || slug.includes("property")) return Scale;
+    return Coins;
+  }
+  if (cat === "Ramadan") return Moon;
+  if (cat === "Quran") return BookOpen;
+  if (cat === "Prayer times") return Clock;
+  if (cat === "Worship planning") return Compass;
+  if (cat === "Family & planning") return Users;
+  if (cat === "Travel planning") return Compass;
+  if (cat === "Giving") return HeartHandshake;
+  return CalcIcon;
+};
 
 export default function App() {
   // Initialize language from localStorage or default to 'en'
@@ -307,7 +336,7 @@ export default function App() {
               className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 ${
                 !currentSlug && selectedCategory === "all"
                   ? "text-[var(--primary)] font-bold"
-                  : "text-[#555f72] hover:text-[var(--primary)]"
+                  : "text-[var(--ink)] hover:text-[var(--primary)]"
               }`}
             >
               {t.calculators}
@@ -322,7 +351,7 @@ export default function App() {
               className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 ${
                 !currentSlug && selectedCategory === "Ramadan"
                   ? "text-[var(--primary)] font-bold"
-                  : "text-[#555f72] hover:text-[var(--primary)]"
+                  : "text-[var(--ink)] hover:text-[var(--primary)]"
               }`}
             >
               {t.ramadan}
@@ -337,20 +366,20 @@ export default function App() {
               className={`text-sm font-semibold transition cursor-pointer border-0 bg-transparent p-0 ${
                 !currentSlug && selectedCategory === "Zakat"
                   ? "text-[var(--primary)] font-bold"
-                  : "text-[#555f72] hover:text-[var(--primary)]"
+                  : "text-[var(--ink)] hover:text-[var(--primary)]"
               }`}
             >
               {t.finance}
             </button>
             <span
-              className="cursor-not-allowed text-sm text-[#8a94a6]"
+              className="cursor-not-allowed text-sm text-[var(--muted)]/60"
               aria-disabled="true"
               title="Coming later"
             >
               {t.food}
             </span>
             <span
-              className="cursor-not-allowed text-sm text-[#8a94a6]"
+              className="cursor-not-allowed text-sm text-[var(--muted)]/60"
               aria-disabled="true"
               title="Coming later"
             >
@@ -386,7 +415,7 @@ export default function App() {
               navigateTo(null);
             }}
             className={`whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 ${
-              !currentSlug && selectedCategory === "all" ? "text-[var(--primary)]" : "text-[#555f72]"
+              !currentSlug && selectedCategory === "all" ? "text-[var(--primary)]" : "text-[var(--ink)]"
             }`}
           >
             {t.calculators}
@@ -399,7 +428,7 @@ export default function App() {
               navigateTo(null);
             }}
             className={`whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 ${
-              !currentSlug && selectedCategory === "Ramadan" ? "text-[var(--primary)]" : "text-[#555f72]"
+              !currentSlug && selectedCategory === "Ramadan" ? "text-[var(--primary)]" : "text-[var(--ink)]"
             }`}
           >
             {t.ramadan}
@@ -412,15 +441,15 @@ export default function App() {
               navigateTo(null);
             }}
             className={`whitespace-nowrap text-sm font-semibold border-0 bg-transparent cursor-pointer p-0 ${
-              !currentSlug && selectedCategory === "Zakat" ? "text-[var(--primary)]" : "text-[#555f72]"
+              !currentSlug && selectedCategory === "Zakat" ? "text-[var(--primary)]" : "text-[var(--ink)]"
             }`}
           >
             {t.finance}
           </button>
-          <span className="whitespace-nowrap text-sm text-[#8a94a6]" aria-disabled="true">
+          <span className="whitespace-nowrap text-sm text-[var(--muted)]/60" aria-disabled="true">
             {t.food}
           </span>
-          <span className="whitespace-nowrap text-sm text-[#8a94a6]" aria-disabled="true">
+          <span className="whitespace-nowrap text-sm text-[var(--muted)]/60" aria-disabled="true">
             {t.more}
           </span>
         </nav>
@@ -463,14 +492,14 @@ export default function App() {
                   <button
                     type="button"
                     onClick={handleCopyLink}
-                    className="rounded-md border border-[var(--line)] bg-white px-2.5 py-1.5 text-xs font-semibold text-[var(--primary)] hover:bg-[var(--canvas)] transition cursor-pointer"
+                    className="rounded-lg bg-[#31AAA9] hover:bg-[#258D8C] text-white px-3.5 py-1.5 text-xs font-bold transition shadow-xs cursor-pointer border-0 flex items-center gap-1.5"
                   >
-                    {copiedLink ? (lang === "ar" ? "تم النسخ!" : lang === "ur" ? "کاپی ہوگیا!" : "Copied!") : (lang === "ar" ? "نسخ الرابط" : lang === "ur" ? "لنک کاپی کریں" : "Share link")}
+                    <span>{copiedLink ? (lang === "ar" ? "✓ تم النسخ!" : lang === "ur" ? "✓ کاپی ہوگیا!" : "✓ Copied!") : (lang === "ar" ? "نسخ الرابط" : lang === "ur" ? "لنک کاپی کریں" : "Share link")}</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => navigateTo(null)}
-                    className="rounded-md border border-[var(--line)] bg-white px-2.5 py-1.5 text-xs font-semibold text-[var(--primary)] hover:bg-[var(--canvas)] transition cursor-pointer"
+                    className="rounded-lg border border-[#31AAA9] bg-white text-[#145352] hover:bg-[#31AAA9] hover:text-white px-3.5 py-1.5 text-xs font-bold transition cursor-pointer"
                   >
                     {lang === "ar" ? "← العودة إلى كل الحاسبات" : lang === "ur" ? "← تمام ٹولز پر واپس" : "← All calculators"}
                   </button>
@@ -512,32 +541,44 @@ export default function App() {
                     </button>
                   </div>
                   <div className="grid gap-4 sm:grid-cols-3">
-                    {relatedTools.map((item) => (
-                      <button
-                        type="button"
-                        key={item.slug}
-                        onClick={() => navigateTo(item.slug)}
-                        className="group text-left rounded-xl border border-[var(--line)] bg-white p-5 no-underline transition hover:border-[#a6afbd] hover:shadow-[0_7px_20px_rgba(37,43,62,.08)] cursor-pointer flex flex-col justify-between"
-                      >
-                        <div>
-                          <span className="text-[10px] font-bold uppercase tracking-[.12em] text-[var(--secondary-ink)]">
-                            {localizedCategory(item.category)}
-                          </span>
-                          <h3 className="mb-1 mt-2 text-sm font-semibold text-[var(--ink)]">
-                            {localizedToolTitle(item)}
-                          </h3>
-                          <p className="m-0 text-xs leading-5 text-[var(--muted)]">
-                            {localizedToolShort(item)}
-                          </p>
-                        </div>
-                        <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-[var(--primary)]">
-                          <span>{t.open}</span>
-                          <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">
-                            →
-                          </span>
-                        </span>
-                      </button>
-                    ))}
+                    {relatedTools.map((item) => {
+                      const IconComp = getToolIcon(item);
+                      return (
+                        <button
+                          type="button"
+                          key={item.slug}
+                          onClick={() => navigateTo(item.slug)}
+                          className="group text-left relative flex min-h-[200px] flex-col justify-between rounded-2xl border border-[#DFBE6E] bg-[var(--highlight)] p-5 sm:p-6 no-underline transition-all duration-200 hover:-translate-y-1 hover:border-[#31AAA9] hover:shadow-[0_12px_28px_rgba(49,170,169,0.22),0_2px_8px_rgba(0,0,0,0.04)] hover:bg-[#FCECC0] cursor-pointer"
+                        >
+                          <div>
+                            <div className="flex items-center justify-between gap-2 mb-3">
+                              <div className="flex items-center gap-2.5">
+                                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#31AAA9] text-white shadow-xs transition-transform duration-200 group-hover:scale-105">
+                                  <IconComp className="h-4 w-4" aria-hidden="true" />
+                                </span>
+                                <span className="text-xs font-bold uppercase tracking-wider text-[#145352]">
+                                  {localizedCategory(item.category)}
+                                </span>
+                              </div>
+                            </div>
+                            <h3 className="mb-1.5 text-base font-bold text-[var(--ink)] leading-snug group-hover:text-[var(--primary)] transition-colors">
+                              {localizedToolTitle(item)}
+                            </h3>
+                            <p className="m-0 text-xs sm:text-sm leading-relaxed text-[#262626]">
+                              {localizedToolShort(item)}
+                            </p>
+                          </div>
+                          <div className="mt-4 pt-3.5 border-t border-[#DFBE6E] flex items-center justify-between">
+                            <span className="text-xs font-bold text-[#145352] group-hover:text-[var(--primary)] transition-colors">
+                              {t.open}
+                            </span>
+                            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#31AAA9] text-white group-hover:bg-[var(--primary)] group-hover:text-white transition-all duration-200 shadow-xs">
+                              <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180 transition-transform duration-200 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                 </section>
               )}
@@ -555,7 +596,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => navigateTo(null)}
-                className="mt-7 inline-flex rounded-lg bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#23283B] cursor-pointer border-0"
+                className="mt-7 inline-flex rounded-lg bg-[var(--primary)] px-6 py-3 text-sm font-bold !text-white transition hover:bg-[var(--primary-hover)] cursor-pointer border-0"
               >
                 {t.returnToCalculators}
               </button>
@@ -582,13 +623,13 @@ export default function App() {
                   {t.heroDescription}
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3 text-xs font-semibold text-[var(--primary)]">
-                  <span className="rounded-full border border-[#d7dce3] bg-white px-3.5 py-2 shadow-xs">
+                  <span className="rounded-full border border-[#ecd79d] bg-[var(--highlight)] text-[var(--ink)] px-3.5 py-2 shadow-xs">
                     {t.practicalTools}
                   </span>
-                  <span className="rounded-full border border-[#d7dce3] bg-white px-3.5 py-2 shadow-xs">
+                  <span className="rounded-full border border-[#ecd79d] bg-[var(--highlight)] text-[var(--ink)] px-3.5 py-2 shadow-xs">
                     {t.privateInputs}
                   </span>
-                  <span className="rounded-full border border-[#d7dce3] bg-white px-3.5 py-2 shadow-xs">
+                  <span className="rounded-full border border-[#ecd79d] bg-[var(--highlight)] text-[var(--ink)] px-3.5 py-2 shadow-xs">
                     {t.notRulings}
                   </span>
                 </div>
@@ -617,7 +658,7 @@ export default function App() {
                     placeholder={lang === "ar" ? "ابحث عن حاسبة أو كلمة مفتاحية..." : lang === "ur" ? "حاسبہ یا عنوان تلاش کریں..." : "Search calculators by name or topic..."}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full rounded-xl border border-[var(--line)] bg-white px-4 py-2.5 text-sm placeholder:text-[#888f9e] focus:border-[var(--primary)] outline-none"
+                    className="w-full rounded-xl border border-[#DFBE6E] bg-white px-4 py-2.5 text-sm text-[var(--ink)] placeholder:text-[#888f9e] focus:border-[#31AAA9] focus:ring-2 focus:ring-[#31AAA9]/20 outline-none transition-all shadow-2xs"
                   />
                   {searchQuery && (
                     <button
@@ -636,14 +677,14 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => setSelectedCategory("all")}
-                  className={`rounded-full px-3.5 py-2 text-xs font-semibold transition-colors cursor-pointer border-0 ${
+                  className={`rounded-full px-3.5 py-2 text-xs font-bold transition-all cursor-pointer border ${
                     selectedCategory === "all"
-                      ? "bg-[var(--primary)] text-white"
-                      : "bg-[var(--highlight)] text-[var(--primary)] hover:bg-[#d7cfb2]"
+                      ? "bg-[var(--primary)] !text-white border-[var(--primary)] shadow-xs"
+                      : "bg-[var(--highlight)] text-[var(--ink)] border-[#DFBE6E] hover:border-[#31AAA9] hover:bg-[#FCECC0]"
                   }`}
                 >
                   <span>{lang === "ar" ? "الكل" : lang === "ur" ? "تمام" : "All"}</span>
-                  <span className={`ml-2 ${selectedCategory === "all" ? "text-white/80" : "text-[#555b68]"}`}>
+                  <span className={`ml-2 ${selectedCategory === "all" ? "text-white/90" : "text-[var(--ink)]/75"}`}>
                     {tools.length}
                   </span>
                 </button>
@@ -655,14 +696,14 @@ export default function App() {
                       type="button"
                       key={group}
                       onClick={() => setSelectedCategory(isSelected ? "all" : group)}
-                      className={`rounded-full px-3.5 py-2 text-xs font-semibold transition-colors cursor-pointer border-0 ${
+                      className={`rounded-full px-3.5 py-2 text-xs font-bold transition-all cursor-pointer border ${
                         isSelected
-                          ? "bg-[var(--primary)] text-white"
-                          : "bg-[var(--highlight)] text-[var(--primary)] hover:bg-[#d7cfb2]"
+                          ? "bg-[var(--primary)] !text-white border-[var(--primary)] shadow-xs"
+                          : "bg-[var(--highlight)] text-[var(--ink)] border-[#DFBE6E] hover:border-[#31AAA9] hover:bg-[#FCECC0]"
                       }`}
                     >
                       <span>{localizedCategory(group)}</span>
-                      <span className={`ml-2 ${isSelected ? "text-white/80" : "text-[#555b68]"}`}>
+                      <span className={`ml-2 ${isSelected ? "text-white/90" : "text-[var(--ink)]/75"}`}>
                         {count}
                       </span>
                     </button>
@@ -690,39 +731,55 @@ export default function App() {
                           {String(groupTools.length).padStart(2, "0")} <span>{t.tools}</span>
                         </span>
                       </div>
-                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                        {groupTools.map((tool, toolIndex) => (
-                          <button
-                            type="button"
-                            key={tool.slug}
-                            onClick={() => navigateTo(tool.slug)}
-                            className="group text-left relative flex min-h-[155px] flex-col justify-between overflow-hidden rounded-xl border border-[var(--line)] bg-white p-5 no-underline transition duration-200 hover:-translate-y-0.5 hover:border-[#a6afbd] hover:shadow-[0_9px_24px_rgba(37,43,62,.08)] cursor-pointer"
-                          >
-                            <span className="absolute right-4 top-4 font-mono text-[10px] text-[#858b97]">
-                              {String(toolIndex + 1).padStart(2, "0")}
-                            </span>
-                            <div>
-                              <span className="mb-3 inline-block rounded-xs border-l-2 border-[var(--secondary-ink)] bg-[var(--highlight)] px-2 py-1 text-[10px] font-bold uppercase tracking-[.1em] text-[var(--primary)]">
-                                {localizedCategory(tool.category)}
-                              </span>
-                              <h4 className="mb-2 mt-1 pr-8 text-base font-semibold text-[var(--ink)]">
-                                {localizedToolTitle(tool)}
-                              </h4>
-                              <p className="m-0 text-sm leading-5 text-[var(--muted)]">
-                                {localizedToolShort(tool)}
-                              </p>
-                            </div>
-                            <span className="mt-4 flex items-center gap-2 text-xs font-bold text-[var(--primary)]">
-                              <span>{t.openCalculator}</span>
-                              <span
-                                aria-hidden="true"
-                                className="transition-transform group-hover:translate-x-1"
-                              >
-                                →
-                              </span>
-                            </span>
-                          </button>
-                        ))}
+                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {groupTools.map((tool, toolIndex) => {
+                          const IconComp = getToolIcon(tool);
+                          return (
+                            <button
+                              type="button"
+                              key={tool.slug}
+                              onClick={() => navigateTo(tool.slug)}
+                              className="group text-left relative flex min-h-[200px] flex-col justify-between rounded-2xl border border-[#DFBE6E] bg-[var(--highlight)] p-5 sm:p-6 no-underline transition-all duration-200 hover:-translate-y-1 hover:border-[#31AAA9] hover:shadow-[0_12px_28px_rgba(49,170,169,0.22),0_2px_8px_rgba(0,0,0,0.04)] hover:bg-[#FCECC0] cursor-pointer"
+                            >
+                              <div>
+                                {/* Header: Icon + Category + Number */}
+                                <div className="flex items-center justify-between gap-3 mb-3">
+                                  <div className="flex items-center gap-2.5">
+                                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#31AAA9] text-white shadow-xs transition-transform duration-200 group-hover:scale-105">
+                                      <IconComp className="h-4 w-4" aria-hidden="true" />
+                                    </span>
+                                    <span className="text-xs font-bold uppercase tracking-wider text-[#145352]">
+                                      {localizedCategory(tool.category)}
+                                    </span>
+                                  </div>
+                                  <span className="font-mono text-xs font-bold text-[#145352]/60">
+                                    {String(toolIndex + 1).padStart(2, "0")}
+                                  </span>
+                                </div>
+
+                                {/* Title */}
+                                <h4 className="mb-1.5 text-base sm:text-lg font-bold leading-snug tracking-[-.02em] text-[var(--ink)] group-hover:text-[var(--primary)] transition-colors">
+                                  {localizedToolTitle(tool)}
+                                </h4>
+
+                                {/* Description */}
+                                <p className="m-0 text-xs sm:text-sm leading-relaxed text-[#262626]">
+                                  {localizedToolShort(tool)}
+                                </p>
+                              </div>
+
+                              {/* Tidy Bottom Action Bar */}
+                              <div className="mt-4 pt-3.5 border-t border-[#DFBE6E] flex items-center justify-between">
+                                <span className="text-xs font-bold text-[#145352] group-hover:text-[var(--primary)] transition-colors">
+                                  {t.openCalculator}
+                                </span>
+                                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#31AAA9] text-white group-hover:bg-[var(--primary)] group-hover:text-white transition-all duration-200 shadow-xs">
+                                  <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180 transition-transform duration-200 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
                       </div>
                     </section>
                   );
@@ -761,55 +818,71 @@ export default function App() {
                       </button>
                     </div>
                   ) : (
-                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                      {filteredTools.map((tool, toolIndex) => (
-                        <button
-                          type="button"
-                          key={tool.slug}
-                          onClick={() => navigateTo(tool.slug)}
-                          className="group text-left relative flex min-h-[155px] flex-col justify-between overflow-hidden rounded-xl border border-[var(--line)] bg-white p-5 no-underline transition duration-200 hover:-translate-y-0.5 hover:border-[#a6afbd] hover:shadow-[0_9px_24px_rgba(37,43,62,.08)] cursor-pointer"
-                        >
-                          <span className="absolute right-4 top-4 font-mono text-[10px] text-[#858b97]">
-                            {String(toolIndex + 1).padStart(2, "0")}
-                          </span>
-                          <div>
-                            <span className="mb-3 inline-block rounded-xs border-l-2 border-[var(--secondary-ink)] bg-[var(--highlight)] px-2 py-1 text-[10px] font-bold uppercase tracking-[.1em] text-[var(--primary)]">
-                              {localizedCategory(tool.category)}
-                            </span>
-                            <h4 className="mb-2 mt-1 pr-8 text-base font-semibold text-[var(--ink)]">
-                              {localizedToolTitle(tool)}
-                            </h4>
-                            <p className="m-0 text-sm leading-5 text-[var(--muted)]">
-                              {localizedToolShort(tool)}
-                            </p>
-                          </div>
-                          <span className="mt-4 flex items-center gap-2 text-xs font-bold text-[var(--primary)]">
-                            <span>{t.openCalculator}</span>
-                            <span
-                              aria-hidden="true"
-                              className="transition-transform group-hover:translate-x-1"
-                            >
-                              →
-                            </span>
-                          </span>
-                        </button>
-                      ))}
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      {filteredTools.map((tool, toolIndex) => {
+                        const IconComp = getToolIcon(tool);
+                        return (
+                          <button
+                            type="button"
+                            key={tool.slug}
+                            onClick={() => navigateTo(tool.slug)}
+                            className="group text-left relative flex min-h-[200px] flex-col justify-between rounded-2xl border border-[#DFBE6E] bg-[var(--highlight)] p-5 sm:p-6 no-underline transition-all duration-200 hover:-translate-y-1 hover:border-[#31AAA9] hover:shadow-[0_12px_28px_rgba(49,170,169,0.22),0_2px_8px_rgba(0,0,0,0.04)] hover:bg-[#FCECC0] cursor-pointer"
+                          >
+                            <div>
+                              {/* Header: Icon + Category + Number */}
+                              <div className="flex items-center justify-between gap-3 mb-3">
+                                <div className="flex items-center gap-2.5">
+                                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#31AAA9] text-white shadow-xs transition-transform duration-200 group-hover:scale-105">
+                                    <IconComp className="h-4 w-4" aria-hidden="true" />
+                                  </span>
+                                  <span className="text-xs font-bold uppercase tracking-wider text-[#145352]">
+                                    {localizedCategory(tool.category)}
+                                  </span>
+                                </div>
+                                <span className="font-mono text-xs font-bold text-[#145352]/60">
+                                  {String(toolIndex + 1).padStart(2, "0")}
+                                </span>
+                              </div>
+
+                              {/* Title */}
+                              <h4 className="mb-1.5 text-base sm:text-lg font-bold leading-snug tracking-[-.02em] text-[var(--ink)] group-hover:text-[var(--primary)] transition-colors">
+                                {localizedToolTitle(tool)}
+                              </h4>
+
+                              {/* Description */}
+                              <p className="m-0 text-xs sm:text-sm leading-relaxed text-[#262626]">
+                                {localizedToolShort(tool)}
+                              </p>
+                            </div>
+
+                            {/* Tidy Bottom Action Bar */}
+                            <div className="mt-4 pt-3.5 border-t border-[#DFBE6E] flex items-center justify-between">
+                              <span className="text-xs font-bold text-[#145352] group-hover:text-[var(--primary)] transition-colors">
+                                {t.openCalculator}
+                              </span>
+                              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#31AAA9] text-white group-hover:bg-[var(--primary)] group-hover:text-white transition-all duration-200 shadow-xs">
+                                <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180 transition-transform duration-200 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+                              </span>
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
               )}
 
               {/* Estimate Advisory Callout */}
-              <aside className="rounded-xl border border-[#c9c1a0] bg-[var(--highlight)] p-5 md:flex md:items-center md:justify-between md:px-7">
+              <aside className="rounded-2xl border border-[#DFBE6E] border-s-4 border-s-[#31AAA9] bg-[var(--highlight)] p-5 md:flex md:items-center md:justify-between md:px-7 shadow-xs">
                 <div>
                   <p className="eyebrow mb-2">{t.estimateEyebrow}</p>
-                  <h2 className="m-0 text-lg font-semibold">{t.estimateTitle}</h2>
-                  <p className="mb-0 mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+                  <h2 className="m-0 text-lg font-bold text-[var(--ink)]">{t.estimateTitle}</h2>
+                  <p className="mb-0 mt-2 max-w-2xl text-sm leading-6 text-[var(--ink)]">
                     {t.estimateDescription}
                   </p>
                 </div>
                 <span
-                  className="mt-4 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#8f8a70] text-lg font-serif text-[var(--primary)] md:ml-8 md:mt-0"
+                  className="mt-4 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--primary)] text-lg font-serif text-[var(--primary)] md:ml-8 md:mt-0 font-bold"
                   aria-hidden="true"
                 >
                   i
@@ -821,15 +894,15 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-20 border-t border-[#9fadb8] bg-[var(--secondary)]">
+      <footer className="mt-20 border-t border-[#238b8a] bg-[var(--secondary)] text-[#0A0A0A]">
         <div className="page-shell flex flex-col justify-between gap-4 py-8 sm:flex-row sm:items-center">
           <div className="flex items-center gap-3">
-            <span className="brand-seal !h-8 !w-8 text-base" aria-hidden="true">
+            <span className="brand-seal !h-8 !w-8 text-base !border-[#0A0A0A] !text-[#0A0A0A]" aria-hidden="true">
               أ
             </span>
-            <span className="text-sm font-semibold">Amanah Calculators</span>
+            <span className="text-sm font-bold text-[#0A0A0A]">Amanah Calculators</span>
           </div>
-          <p className="m-0 text-sm text-[var(--muted)]">{t.footerNote}</p>
+          <p className="m-0 text-sm font-medium text-[#0A0A0A]">{t.footerNote}</p>
           <button
             type="button"
             onClick={() => {
@@ -837,7 +910,7 @@ export default function App() {
               setSearchQuery("");
               navigateTo(null);
             }}
-            className="text-sm font-semibold text-[var(--primary)] underline-offset-4 hover:underline border-0 bg-transparent p-0 cursor-pointer text-left"
+            className="text-sm font-bold text-[#0A0A0A] underline-offset-4 hover:underline border-0 bg-transparent p-0 cursor-pointer text-left hover:text-[var(--primary)]"
           >
             {t.allTools}
           </button>

@@ -1,6 +1,6 @@
 {
   "name": "Amanah Calculators",
-  "description": "Clear, thoughtful Islamic worship, giving, and finance estimates with room for nuance.",
+  "description": "Faithful, practical Islamic estimates for worship, giving, and finance with clear assumptions.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

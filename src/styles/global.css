@@ -3,19 +3,20 @@
 
 :root {
   color-scheme: light;
-  --ink: #111318;
-  --muted: #505665;
-  --primary: #30364F;
-  --secondary: #ACBAC4;
-  --secondary-ink: #515D72;
-  --paper: #fff;
-  --canvas: #F7F8FA;
-  --line: #E0E3E8;
-  --result: #F0F0DB;
-  --highlight: #E1D9BC;
+  --ink: #0A0A0A;
+  --muted: #262626;
+  --primary: #6C1A1A;
+  --primary-hover: #541414;
+  --secondary: #31AAA9;
+  --secondary-ink: #195857;
+  --paper: #FFFFFF;
+  --canvas: #FFFFFF;
+  --line: #E5E7EB;
+  --result: #FFF0C5;
+  --highlight: #F8E0A4;
   --font-latin: "DM Sans", sans-serif;
   --font-arabic: "Amiri", serif;
---font-urdu: "Noto Nastaliq Urdu", serif;
+  --font-urdu: "Noto Nastaliq Urdu", serif;
   font-family: var(--font-latin);
   color: var(--ink);
   background: var(--paper);
@@ -26,14 +27,15 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; background: var(--paper); }
+body { margin: 0; min-width: 320px; background: var(--paper); color: var(--ink); }
 html[lang="ar"] body { font-family: var(--font-arabic); }
 html[lang="ur"] body { font-family: var(--font-urdu); }
 button, input, select { font: inherit; }
+input, select { color: var(--ink); }
 button, a { -webkit-tap-highlight-color: transparent; }
 a { color: inherit; }
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
-  outline: 3px solid #7b8498;
+  outline: 3px solid #6C1A1A;
   outline-offset: 3px;
 }
 .font-arabic { font-family: var(--font-arabic); }
@@ -41,12 +43,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .page-shell { width: min(1160px, calc(100% - 48px)); margin-inline: auto; }
 .eyebrow { color: var(--primary); font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
 .quiet-grid {
-  background-image: linear-gradient(to right, rgba(48,54,79,.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(48,54,79,.035) 1px, transparent 1px);
+  background-image: linear-gradient(to right, rgba(108,26,26,.025) 1px, transparent 1px), linear-gradient(to bottom, rgba(108,26,26,.025) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 .brand-seal {
   display: grid; place-items: center; width: 39px; height: 39px;
-  border: 1px solid var(--secondary); border-radius: 50%; color: var(--primary);
+  border: 1px solid var(--primary); border-radius: 50%; color: var(--primary);
   font-family: var(--font-arabic); font-size: 1.25rem; line-height: 1;
 }
 .fade-up { animation: fade-up .45s ease-out both; }
